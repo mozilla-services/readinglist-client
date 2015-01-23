@@ -1,0 +1,45 @@
+{
+  "name": "readinglist-client",
+  "version": "0.0.1",
+  "description": "Client webapp for the readinglist API.",
+  "main": "index.js",
+  "scripts": {
+    "build": "gulp dist",
+    "lint": "jsxhint -c .jshintrc src/js",
+    "dev": "gulp",
+    "test": "npm run lint && mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/n1k0/readinglist-client"
+  },
+  "keywords": [
+    "readinglist"
+  ],
+  "author": "Nicolas Perriault <nperriault@mozilla.com>",
+  "license": "Mozilla Public License 2.0",
+  "bugs": {
+    "url": "https://github.com/n1k0/readinglist-client/issues"
+  },
+  "homepage": "https://github.com/n1k0/readinglist-client",
+  "dependencies": {
+    "bootstrap": "^3.3.2",
+    "browserify": "^8.1.*",
+    "gulp": "^3.8.*",
+    "gulp-uglify": "^1.1.*",
+    "gulp-webserver": "^0.9.*",
+    "react": "0.12.2",
+    "react-bootstrap": "^0.13.*",
+    "reactify": "^1.0.*",
+    "twitter-bootstrap-3.0.0": "^3.0.0",
+    "vinyl-source-stream": "^1.0.*",
+    "watchify": "^2.2.*"
+  },
+  "devDependencies": {
+    "chai": "latest",
+    "jsxhint": "latest",
+    "mocha": "latest",
+    "react-tools": "0.12.2",
+    "sinon": "latest"
+  }
+}
