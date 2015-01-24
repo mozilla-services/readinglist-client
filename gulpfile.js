@@ -6,6 +6,7 @@ var gulp = require("gulp");
 var browserify = require('browserify');
 var watchify = require('watchify');
 var source = require('vinyl-source-stream');
+var to5ify = require('6to5ify');
 var uglify = require('gulp-uglify');
 var webserver = require("gulp-webserver");
 
@@ -55,11 +56,11 @@ gulp.task("assets:css", function() {
 /**
  * JS tasks
  */
-
 gulp.task("js", ["js:vendors", "js:app"]);
 
 gulp.task("js:app", ["js:vendors"], function() {
   return browserify("./" + opt.app.src)
+    .transform(to5ify)
     .transform("reactify")
     .external("react")
     .external("react-bootstrap")
@@ -77,7 +78,6 @@ gulp.task("js:vendors", function() {
     .pipe(gulp.dest(opt.outputFolder + "/js"));
 });
 
-
 /**
  * Server task
  */
@@ -89,18 +89,15 @@ gulp.task("server", function() {
 /**
  * Watchify
  */
-
 gulp.task("watchify", function(){
-
   var b = browserify( "./" + opt.app.src , watchify.args)
     .transform("reactify")
+    .transform(to5ify)
     .external("react")
     .external("react-bootstrap")
     .external("marked");
 
-
   function updateBundle(w){
-
     return w.bundle()
       .pipe(source(opt.app.dest))
       .pipe(gulp.dest(opt.outputFolder + "/js"));
@@ -112,7 +109,6 @@ gulp.task("watchify", function(){
   });
 
   return updateBundle(watcher);
-
 });
 
 /**

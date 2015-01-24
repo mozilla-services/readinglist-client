@@ -31,11 +31,11 @@
     "react": "0.12.2",
     "react-bootstrap": "^0.13.*",
     "reactify": "^1.0.*",
-    "twitter-bootstrap-3.0.0": "^3.0.0",
     "vinyl-source-stream": "^1.0.*",
     "watchify": "^2.2.*"
   },
   "devDependencies": {
+    "6to5ify": "latest",
     "chai": "latest",
     "jsxhint": "latest",
     "mocha": "latest",
