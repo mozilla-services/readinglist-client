@@ -9,6 +9,7 @@ var source = require('vinyl-source-stream');
 var to5ify = require('6to5ify');
 var uglify = require('gulp-uglify');
 var webserver = require("gulp-webserver");
+var karma = require('karma').server;
 
 var opt = {
   outputFolder: "build",
@@ -29,10 +30,11 @@ var opt = {
     "src/index.html"
   ],
   app: {
-    src: "src/js/app.jsx",
+    src: "src/js/main.js",
     dest: "app.js"
   },
-  vendors: "vendors.js"
+  vendors: "vendors.js",
+  karmaConfigPath: __dirname + "/karma.conf.js"
 };
 
 /**
@@ -79,11 +81,35 @@ gulp.task("js:vendors", function() {
 });
 
 /**
- * Server task
+ * Server task.
  */
 gulp.task("server", function() {
    return gulp.src(opt.outputFolder)
     .pipe(webserver(opt.server));
+});
+
+/**
+ * Run test once and exit.
+ */
+gulp.task("test", function(done) {
+  karma.start({
+    configFile: opt.karmaConfigPath,
+    singleRun: true
+  }, function(status) {
+    if (status > 0) {
+      console.error("Test suite failed.");
+    }
+    process.exit(status);
+  });
+});
+
+/**
+ * Watch for file changes and re-run tests on each change.
+ */
+gulp.task("tdd", function(done) {
+  karma.start({
+    configFile: opt.karmaConfigPath
+  }, done);
 });
 
 /**
@@ -94,8 +120,7 @@ gulp.task("watchify", function(){
     .transform("reactify")
     .transform(to5ify)
     .external("react")
-    .external("react-bootstrap")
-    .external("marked");
+    .external("react-bootstrap");
 
   function updateBundle(w){
     return w.bundle()

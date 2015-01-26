@@ -20,7 +20,8 @@ Local dev server
 
     $ npm run dev
 
-Notes:
+### Notes:
+
 - This local development server will watch for local asset changes and live-reload the page automatically.
 - The address used is http://localhost:4000
 
@@ -32,7 +33,16 @@ Linting
 Tests
 -----
 
-    $ npm run test
+This will run the unit test suite against a Karma browser matrix and exits.
+
+    $ npm test
+
+TDD
+---
+
+This will launch a live Karma server watching and running tests on each source change.
+
+    $ npm run tdd
 
 Building
 --------

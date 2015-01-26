@@ -1,6 +1,6 @@
 "use strict";
 
-var React = require('react');
+var React = require("react");
 
 class Greeter {
   constructor(name) {
@@ -19,4 +19,4 @@ var App = React.createClass({
   }
 });
 
-React.render(<App/>, document.querySelector("#app"));
+module.exports = App;
