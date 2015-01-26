@@ -29,7 +29,7 @@ var opt = {
     "src/index.html"
   ],
   app: {
-    src: "src/js/app.jsx",
+    src: "src/js/main.js",
     dest: "app.js"
   },
   vendors: "vendors.js"
