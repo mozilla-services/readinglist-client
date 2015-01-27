@@ -7,8 +7,8 @@
     "build": "gulp dist",
     "lint": "jsxhint -c .jshintrc src/js",
     "dev": "gulp",
-    "karma": "./node_modules/karma/bin/karma start --single-run",
-    "test": "npm run lint && npm run karma"
+    "tdd": "gulp tdd",
+    "test": "npm run lint && gulp test"
   },
   "repository": {
     "type": "git",
