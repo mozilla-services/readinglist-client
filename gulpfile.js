@@ -34,7 +34,8 @@ var opt = {
     dest: "app.js"
   },
   vendors: "vendors.js",
-  karmaConfigPath: __dirname + "/karma.conf.js"
+  karmaConfigPath: __dirname + "/karma.conf.js",
+  coverageReportPath: __dirname + "/coverage/complete.txt"
 };
 
 /**
@@ -98,6 +99,13 @@ gulp.task("test", function(done) {
   }, function(status) {
     if (status > 0) {
       console.error("Test suite failed.");
+    }
+    try {
+      console.log(require("fs").readFileSync(opt.coverageReportPath, {
+        encoding: "utf-8"
+      }));
+    } catch (err) {
+      console.warn("Couldn't retrieve coverage data.");
     }
     process.exit(status);
   });

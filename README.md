@@ -39,6 +39,8 @@ This will run the unit test suite against a Karma browser matrix and exits.
 
     $ npm test
 
+Note that this will take care of generating coverage reports; html version is available in the `coverage` subfolder.
+
 TDD
 ---
 

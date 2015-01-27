@@ -31,7 +31,7 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      "src/**/*.js": ["browserify"],
+      "src/**/*.js": ["browserify", "coverage"],
       "test/**/*.js": ["browserify"]
     },
 
@@ -40,10 +40,19 @@ module.exports = function(config) {
       transform: ["reactify", "6to5ify"]
     },
 
+    coverageReporter: {
+      dir: "coverage",
+      reporters: [
+        { type: "html", subdir: "report-html" },
+        { type: "text", subdir: ".", file: "complete.txt" },
+        { type: "text-summary", subdir: ".", file: "simple.txt" },
+      ]
+    },
+
     // test results reporter to use
     // possible values: "dots", "progress"
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ["progress"],
+    reporters: ["progress", "coverage"],
 
     // web server port
     port: 9876,
