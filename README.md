@@ -32,7 +32,9 @@ Linting
 Tests
 -----
 
-    $ npm run test
+This will run the unit test suite against a Karma browser matrix.
+
+    $ npm run karma
 
 Building
 --------
