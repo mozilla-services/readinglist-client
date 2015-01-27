@@ -1,6 +1,8 @@
 Readinglist client
 ==================
 
+[![Build Status](https://travis-ci.org/n1k0/readinglist-client.svg?branch=master)](https://travis-ci.org/n1k0/readinglist-client)
+
 This is work in progress at a temporary location.
 
 Installation
