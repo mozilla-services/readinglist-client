@@ -3,8 +3,7 @@
 
 module.exports = function(config) {
   "use strict";
-
-  var configuration = {
+  config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: '',
@@ -72,12 +71,5 @@ module.exports = function(config) {
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
     singleRun: true
-  };
-
-  // Continuous integration specific configuration
-  if (process.env.TRAVIS) {
-    configuration.browsers.push('PhantomJS');
-  }
-
-  config.set(configuration);
+  });
 };
