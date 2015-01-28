@@ -53,7 +53,7 @@ module.exports = function(config) {
     // test results reporter to use
     // possible values: "dots", "progress"
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ["progress", "coverage", "coveralls"],
+    reporters: ["progress", "coverage"],
 
     // web server port
     port: 9876,
@@ -86,6 +86,10 @@ module.exports = function(config) {
 
   if (process.env.TRAVIS) {
     cfg.browsers.push("Chrome_travis_ci");
+
+    if (process.env.COVERALLS_REPO_TOKEN) {
+      cfg.reporters.push("coveralls");
+    }
   }
 
   config.set(cfg);

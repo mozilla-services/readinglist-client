@@ -95,6 +95,7 @@ gulp.task("server", function() {
 gulp.task("test", function(done) {
   karma.start({
     configFile: opt.karmaConfigPath,
+    autoWatch: false,
     singleRun: true
   }, function(status) {
     if (status > 0) {
