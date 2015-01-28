@@ -1,13 +1,11 @@
 {
   "browser": true,
-  "camelcase": true,
   "devel": true,
   "eqeqeq": true,
   "esnext": true,
   "globalstrict": true,
   "immed": false,
   "indent": 2,
-  "jquery": true,
   "latedef": true,
   "maxlen": 120,
   "newcap": false,

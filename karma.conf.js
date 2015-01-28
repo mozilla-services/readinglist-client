@@ -7,13 +7,15 @@ module.exports = function(config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ["browserify", "mocha", "chai"],
+    frameworks: ["browserify", "mocha", "chai", "chai-as-promised"],
 
     client: {
+      captureConsole: true,
       // mocha specific configuration
       mocha: {
         reporter: "html", // change Karma"s debug.html to the mocha web reporter
-        ui: "bdd"
+        ui: "bdd",
+        bail: true
       }
     },
 
@@ -53,7 +55,7 @@ module.exports = function(config) {
 
     // level of logging
     // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-    logLevel: config.LOG_INFO,
+    logLevel: config.LOG_ERROR,
 
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: true,
