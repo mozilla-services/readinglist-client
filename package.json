@@ -42,7 +42,7 @@
     "chai": "latest",
     "jsxhint": "latest",
     "karma": "^0.12.*",
-    "karma-6to5-preprocessor": "^1.0.*",
+    "karma-6to5-preprocessor": "^3.0.*",
     "karma-browserify": "^3.0.*",
     "karma-chai": "^0.1.*",
     "karma-chai-plugins": "^0.2.4",
