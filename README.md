@@ -15,7 +15,9 @@ Required nodejs v0.10.29+ and npm v2.1.0+.
 Configuration
 -------------
 
-TODO
+You can configure the client using the following environment variables:
+
+- `READINGLIST_SERVER_BASEURL`: the Readinglist server base URL; default: `http://0.0.0.0:8000/v0`
 
 Local dev server
 ----------------

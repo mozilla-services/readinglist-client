@@ -1,10 +1,10 @@
 "use strict";
 
-var expect = require("chai").expect;
-var sinon = require("sinon");
+import { expect } from "chai";
+import { respondWith } from "./utils";
+import sinon from "sinon";
 
-var testUtils = require("./utils");
-var API = require("../js/api");
+import API from "../js/api";
 
 describe("API", function() {
   var sandbox, server, api, baseUrl = "http://localhost:8000/v0";
@@ -15,14 +15,12 @@ describe("API", function() {
     added_by: "Fake",
   };
 
-  /* jshint unused:false */
-  /**
-   * JSON dump utility function, for debugging purpose.
-   */
-  function jdump(o) {
-    console.log(JSON.stringify(o, null, 4));
-  }
-  /* jshint unused:true */
+  var fakeAuthError = {
+    errno: 104,
+    message: "Please authenticate yourself to use this endpoint.",
+    code: 401,
+    error: "Unauthorized"
+  };
 
   beforeEach(function() {
     sandbox = sinon.sandbox.create({useFakeServer: true});
@@ -41,7 +39,7 @@ describe("API", function() {
     var serverRespond;
 
     beforeEach(function() {
-      serverRespond = testUtils.respondWith.bind(null, server, "GET /hello");
+      serverRespond = respondWith.bind(null, server, "GET /hello");
     });
 
     it("should fulfill request", function() {
@@ -49,12 +47,9 @@ describe("API", function() {
       return api.hello().should.be.fulfilled;
     });
 
-    it("should retrieve JSON information", function(done) {
+    it("should retrieve JSON information", function() {
       serverRespond({body: {hello: "readinglist"}});
-      return api.hello().then(function(response) {
-        expect(response.entity.hello).eql("readinglist");
-        done();
-      });
+      return api.hello().should.become({hello: "readinglist"});
     });
   });
 
@@ -63,20 +58,17 @@ describe("API", function() {
     var articleData = sampleArticleData;
 
     beforeEach(function() {
-      serverRespond = testUtils.respondWith.bind(null, server, "POST /articles");
+      serverRespond = respondWith.bind(null, server, "POST /articles");
     });
 
     it("should reject request when unauthenticated", function() {
-      serverRespond({status: 401, body: {message: "Wrong."}});
-      return api.createArticle(articleData).should.be.rejectedWith("Wrong.");
+      serverRespond({status: 401, body: fakeAuthError});
+      return api.createArticle(articleData).should.be.rejectedWith(fakeAuthError.message);
     });
 
-    it("should create an article", function(done) {
+    it("should create an article", function() {
       serverRespond({body: {id: 42}});
-      return api.createArticle(articleData).then(function(response) {
-        expect(response.entity.id).eql(42);
-        done();
-      });
+      return api.createArticle(articleData).should.become({id: 42});
     });
   });
 
@@ -85,20 +77,17 @@ describe("API", function() {
     var articles = [sampleArticleData];
 
     beforeEach(function() {
-      serverRespond = testUtils.respondWith.bind(null, server, "GET /articles");
+      serverRespond = respondWith.bind(null, server, "GET /articles");
     });
 
     it("should reject request when unauthenticated", function() {
-      serverRespond({status: 401, body: {message: "Wrong."}});
-      return api.listArticles({}).should.be.rejectedWith("Wrong.");
+      serverRespond({status: 401, body: fakeAuthError});
+      return api.listArticles({}).should.be.rejectedWith(fakeAuthError.message);
     });
 
-    it("should retrieve articles list", function(done) {
+    it("should retrieve articles list", function() {
       serverRespond({body: {items: articles}});
-      return api.listArticles({}).then(function(response) {
-        expect(response.entity.items).to.have.length.of(1);
-        done();
-      });
+      return api.listArticles({}).should.become(articles);
     });
   });
 
@@ -106,20 +95,17 @@ describe("API", function() {
     var serverRespond;
 
     beforeEach(function() {
-      serverRespond = testUtils.respondWith.bind(null, server, "GET /article/42");
+      serverRespond = respondWith.bind(null, server, "GET /article/42");
     });
 
     it("should reject request when unauthenticated", function() {
-      serverRespond({status: 401, body: {message: "Wrong."}});
-      return api.getArticle({id: 42}).should.be.rejectedWith("Wrong.");
+      serverRespond({status: 401, body: fakeAuthError});
+      return api.getArticle({id: 42}).should.be.rejectedWith(fakeAuthError.message);
     });
 
-    it("should retrieve an article", function(done) {
+    it("should retrieve an article", function() {
       serverRespond({body: sampleArticleData});
-      return api.getArticle({id: 42}).then(function(response) {
-        expect(response.entity).to.eql(sampleArticleData);
-        done();
-      });
+      return api.getArticle({id: 42}).should.become(sampleArticleData);
     });
   });
 
@@ -127,17 +113,17 @@ describe("API", function() {
     var serverRespond;
 
     beforeEach(function() {
-      serverRespond = testUtils.respondWith.bind(null, server, "DELETE /article/42");
+      serverRespond = respondWith.bind(null, server, "DELETE /article/42");
     });
 
     it("should reject request when unauthenticated", function() {
-      serverRespond({status: 401, body: {message: "Wrong."}});
-      return api.deleteArticle({id: 42}).should.be.rejectedWith("Wrong.");
+      serverRespond({status: 401, body: fakeAuthError});
+      return api.deleteArticle({id: 42}).should.be.rejectedWith(fakeAuthError.message);
     });
 
     it("should retrieve an article", function() {
-      serverRespond({body: ""});
-      return api.deleteArticle({id: 42}).should.be.fulfilled;
+      serverRespond({body: ""}); // response has an empty body
+      return api.deleteArticle({id: 42}).should.become("");
     });
   });
 });

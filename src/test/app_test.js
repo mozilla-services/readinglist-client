@@ -1,25 +1,32 @@
 "use strict";
 
-var expect = require("chai").expect;
+import React from "react/addons";
+import sinon from "sinon";
+import { expect } from "chai";
+import { ArticleActions, ArticleStore, stores } from "../js/flux";
+import App from "../js/components/App";
+import { $$ } from "./utils";
 
-var React = require("react/addons");
 var TestUtils = React.addons.TestUtils;
-var App = require("../js/app");
-var $ = require("./utils").$;
 
 describe("App", function() {
-  var api, view;
+  var sandbox, articleStore, view;
 
   beforeEach(function() {
-    api = {hello: () => new Promise(r => r("foo"))};
-    view = TestUtils.renderIntoDocument(<App api={api} />);
+    sandbox = sinon.sandbox.create();
+    articleStore = new ArticleStore({});
+    stores.register({articleStore: articleStore});
+    sandbox.stub(ArticleActions);
+    view = TestUtils.renderIntoDocument(<App />);
   });
 
-  it("should be mountable on local DOM", function() {
-    expect(view.getDOMNode()).not.eql(null);
+  afterEach(function() {
+    sandbox.restore();
   });
 
-  it("should render the app name", function() {
-    setTimeout(() => expect($(view, "h1").textContent).eql("foo"));
+  it("should load article list on mount", function() {
+    articleStore.setState({articles: [{}, {}]});
+
+    expect($$(view, "li")).to.have.length.of(2);
   });
 });

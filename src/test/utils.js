@@ -1,29 +1,34 @@
-/**
- * Test utils.
- */
-
 "use strict";
 
 /**
- * Simple querySelector alias.
+ * Simple querySelector alias for React components.
  *
  * @param  {ReactComponent} view  React component.
  * @param  {String}         sel   CSS3 selector.
  * @return {DOMElement|null}
  */
-function $(view, sel) {
+export function $(view, sel) {
   return view.getDOMNode().querySelector(sel);
 }
 
 /**
- * Simple querySelectorAll alias.
+ * Simple querySelectorAll alias for React components.
  *
  * @param  {ReactComponent} view  React component.
  * @param  {String}         sel   CSS3 selector.
  * @return {NodeList|null}
  */
-function $$(view, sel) {
+export function $$(view, sel) {
   return [].slice.call(view.getDOMNode().querySelectorAll(sel));
+}
+
+/**
+ * Serialized data dump utility.
+ *
+ * @param  {Any} o
+ */
+export function jdump(o) {
+  console.log(JSON.stringify(o, null, 4));
 }
 
 /**
@@ -34,7 +39,7 @@ function $$(view, sel) {
  * @param  {String} endpoint Endpoint, eg. "GET /articles"
  * @param  {Object} response Response options.
  */
-function respondWith(server, endpoint, response={}) {
+export function respondWith(server, endpoint, response={}) {
   var {method, path} = endpoint.split(" ");
   server.respondWith(method, path, [
     response.status || 200,
@@ -45,8 +50,22 @@ function respondWith(server, endpoint, response={}) {
   ]);
 }
 
-module.exports = {
-  $: $,
-  $$: $$,
-  respondWith: respondWith
-};
+export function asyncAssert(done, fn) {
+  setImmediate(() => { fn(); done(); });
+}
+
+export function fulfiller(...rest) {
+  return function(fulfill) {
+    fulfill(...rest);
+  };
+}
+
+export function rejecter(...rest) {
+  return function(_, reject) {
+    reject(...rest);
+  };
+}
+
+export function returnPromise(handler) {
+  return () => new Promise(handler);
+}

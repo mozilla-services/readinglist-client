@@ -3,7 +3,6 @@
 "use strict";
 
 var gulp = require("gulp");
-var fs = require("fs");
 var browserify = require('browserify');
 var watchify = require('watchify');
 var source = require('vinyl-source-stream');
@@ -31,8 +30,8 @@ var opt = {
     "src/index.html"
   ],
   app: {
-    src: "src/js/main.js",
-    dest: "app.js"
+    src: "./src/js/main.js",
+    dest: "bundle.js"
   },
   vendors: "vendors.js",
   karmaConfigPath: __dirname + "/karma.conf.js"
@@ -62,11 +61,11 @@ gulp.task("assets:css", function() {
 gulp.task("js", ["js:vendors", "js:app"]);
 
 gulp.task("js:app", ["js:vendors"], function() {
-  return browserify("./" + opt.app.src)
+  return browserify(opt.app.src)
+    .external("react/addons")
+    .external("docbrown")
     .transform(to5ify)
     .transform("reactify")
-    .external("react")
-    .external("react-bootstrap")
     .bundle()
     .pipe(source(opt.app.dest))
     .pipe(gulp.dest(opt.outputFolder + "/js"));
@@ -74,8 +73,8 @@ gulp.task("js:app", ["js:vendors"], function() {
 
 gulp.task("js:vendors", function() {
   return browserify()
-    .require("react")
-    .require("react-bootstrap")
+    .require("react/addons")
+    .require("docbrown")
     .bundle()
     .pipe(source(opt.vendors))
     .pipe(gulp.dest(opt.outputFolder + "/js"));
@@ -117,21 +116,21 @@ gulp.task("tdd", function(done) {
 /**
  * Watchify
  */
-gulp.task("watchify", function(){
-  var b = browserify( "./" + opt.app.src , watchify.args)
-    .transform("reactify")
+gulp.task("watchify", function() {
+  var b = browserify(opt.app.src, watchify.args)
+    .external("react/addons")
+    .external("docbrown")
     .transform(to5ify)
-    .external("react")
-    .external("react-bootstrap");
+    .transform("reactify");
 
-  function updateBundle(w){
+  function updateBundle(w) {
     return w.bundle()
       .pipe(source(opt.app.dest))
       .pipe(gulp.dest(opt.outputFolder + "/js"));
   }
 
   var watcher= watchify(b);
-  watcher.on("update", function(){
+  watcher.on("update", function() {
     updateBundle(watcher);
   });
 
@@ -142,7 +141,7 @@ gulp.task("watchify", function(){
  * Watch task
  * Launch a server with livereload
  */
-gulp.task("watch", ["assets","js:vendors", "watchify"], function() {
+gulp.task("watch", ["assets", "js:vendors", "watchify"], function() {
   gulp.watch(opt.cssAssets,  ["assets:css"]);
   gulp.watch(opt.fontAssets, ["assets:fonts"]);
   gulp.watch(opt.htmlAssets, ["assets:html"]);

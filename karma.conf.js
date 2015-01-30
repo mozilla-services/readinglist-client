@@ -15,31 +15,31 @@ module.exports = function(config) {
       mocha: {
         reporter: "html", // change Karma"s debug.html to the mocha web reporter
         ui: "bdd",
-        bail: true
+        bail: false
       }
     },
 
     // list of files / patterns to load in the browser
     files: [
-      "src/js/app.js",
-      "src/test/*_test.js"
+      //{pattern: "node_modules/docbrown/index.js", watched: true, served: false, included: false},
+      "src/js/**/*.js",
+      "src/test/index.js"
     ],
 
     // list of files to exclude
     exclude: [
-      "src/**/main.js"
+      "src/js/main.js"
     ],
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      "src/**/*.js": ["browserify"],
-      "test/**/*.js": ["browserify"]
+      "src/**/*.js": ["browserify"]
     },
 
     browserify: {
       debug: true,
-      transform: ["reactify", "6to5ify"]
+      transform: ["6to5ify", "reactify"]
     },
 
     // test results reporter to use

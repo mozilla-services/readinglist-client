@@ -7,7 +7,6 @@
   "immed": false,
   "indent": 2,
   "latedef": true,
-  "maxlen": 120,
   "newcap": false,
   "node": true,
   "strict": true,

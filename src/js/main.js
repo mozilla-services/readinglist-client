@@ -1,10 +1,15 @@
 "use strict";
 
-var React = require("react");
-var App = require("./app");
-var API = require("./api.js");
-var baseUrl = process.env.READINGLIST_SERVER_BASEURL || "http://0.0.0.0:8000/v0";
+import React from "react/addons";
+import API from "./api";
+import { ArticleStore, stores } from "./flux";
+import App from "./components/App";
 
-var api = new API(baseUrl);
+// XXX handle this with envify
+var serverUrl = process.env.READINGLIST_SERVER_BASEURL || "http://0.0.0.0:8000/v0";
 
-React.render(<App api={api} />, document.querySelector("#app"));
+stores.register({
+  articleStore: new ArticleStore(new API(serverUrl))
+});
+
+React.render(<App />, document.querySelector("#app"));
