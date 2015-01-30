@@ -31,7 +31,7 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      "src/**/*.js": ["browserify", "coverage"],
+      "src/**/*.js": ["browserify"],
       "test/**/*.js": ["browserify"]
     },
 
@@ -40,20 +40,10 @@ module.exports = function(config) {
       transform: ["reactify", "6to5ify"]
     },
 
-    coverageReporter: {
-      dir: "coverage",
-      reporters: [
-        { type: "html", subdir: "report-html" },
-        { type: "text", subdir: ".", file: "complete.txt" },
-        { type: "text-summary", subdir: ".", file: "simple.txt" },
-        { type: "lcov", subdir: "." }
-      ]
-    },
-
     // test results reporter to use
     // possible values: "dots", "progress"
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ["progress", "coverage"],
+    reporters: ["progress"],
 
     // web server port
     port: 9876,
@@ -86,10 +76,6 @@ module.exports = function(config) {
 
   if (process.env.TRAVIS) {
     cfg.browsers.push("Chrome_travis_ci");
-
-    if (process.env.COVERALLS_REPO_TOKEN) {
-      cfg.reporters.push("coveralls");
-    }
   }
 
   config.set(cfg);

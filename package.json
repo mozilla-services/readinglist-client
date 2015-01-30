@@ -44,8 +44,6 @@
     "karma-browserify": "^3.0.*",
     "karma-chai": "^0.1.*",
     "karma-chrome-launcher": "^0.1.7",
-    "karma-coverage": "^0.2.7",
-    "karma-coveralls": "^0.1.5",
     "karma-firefox-launcher": "^0.1.*",
     "karma-mocha": "^0.1.*",
     "karma-react-preprocessor": "0.0.*",

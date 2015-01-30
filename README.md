@@ -1,7 +1,7 @@
 Readinglist client
 ==================
 
-[![Build Status](https://travis-ci.org/n1k0/readinglist-client.svg?branch=master)](https://travis-ci.org/n1k0/readinglist-client) [![Dependency Status](https://www.versioneye.com/user/projects/54c76b2d1a0071823a000580/badge.svg?style=flat)](https://www.versioneye.com/user/projects/54c76b2d1a0071823a000580) [![Coverage Status](https://coveralls.io/repos/n1k0/readinglist-client/badge.svg)](https://coveralls.io/r/n1k0/readinglist-client)
+[![Build Status](https://travis-ci.org/n1k0/readinglist-client.svg?branch=master)](https://travis-ci.org/n1k0/readinglist-client) [![Dependency Status](https://www.versioneye.com/user/projects/54c76b2d1a0071823a000580/badge.svg?style=flat)](https://www.versioneye.com/user/projects/54c76b2d1a0071823a000580)
 
 This is work in progress at a temporary location.
 
@@ -38,8 +38,6 @@ Tests
 This will run the unit test suite against a Karma browser matrix and exits.
 
     $ npm test
-
-Note that this will take care of generating coverage reports; html version is available in the `coverage` subfolder.
 
 TDD
 ---
