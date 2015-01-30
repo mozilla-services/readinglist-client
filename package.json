@@ -38,7 +38,7 @@
     "watchify": "^2.2.*"
   },
   "devDependencies": {
-    "6to5ify": "latest",
+    "6to5ify": "4.0.*",
     "chai": "latest",
     "jsxhint": "latest",
     "karma": "^0.12.*",
