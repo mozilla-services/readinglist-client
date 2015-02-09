@@ -2,8 +2,11 @@
 
 import React from "react/addons";
 import { ArticleActions } from "../flux";
+import { PureRenderMixin } from "react/addons";
 
 export default React.createClass({
+  mixins: [PureRenderMixin],
+
   handleDeleteClick: function() {
     if (confirm("Are you sure?")) {
       ArticleActions.delete(this.props.article);
@@ -14,9 +17,7 @@ export default React.createClass({
     return (
       <div>
         <h4>
-          <a href={this.props.article.resolved_url}>
-            {this.props.article.resolved_title}
-          </a>
+          <a href={this.props.article.url}>{this.props.article.title}</a>
           {" "}
           <sup>{this.props.article.unread ? "unread" : ""}</sup>
         </h4>

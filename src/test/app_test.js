@@ -25,7 +25,7 @@ describe("App", function() {
   });
 
   it("should load article list on mount", function() {
-    articleStore.setState({articles: [{}, {}]});
+    articleStore.setState({articles: [{id:1}, {id:2}]});
 
     expect($$(view, "li")).to.have.length.of(2);
   });

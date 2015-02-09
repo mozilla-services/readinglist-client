@@ -44,7 +44,7 @@ export default class API {
     return rest
       .wrap(pathPrefix, {prefix: this.baseUrl})
       .wrap(errorCode, {code: 400})
-      .wrap(defaultRequest, {headers: {"X-Requested-With": "readinglist-client"}})
+      .wrap(defaultRequest, {headers: {"Requested-With": "readinglist-client"}})
       .wrap(mime, {mime: "application/json;encoding=UTF-8"})
       .wrap(hateoas)
       // XXX fix this

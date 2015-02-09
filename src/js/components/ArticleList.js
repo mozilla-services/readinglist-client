@@ -11,20 +11,28 @@ export default React.createClass({
     return JSON.stringify(this.props) !== JSON.stringify(nextProps);
   },
 
+  renderEmptyListMessage: function() {
+    if (this.props.articles.length > 0) return;
+    return (
+      <p className="list-group-item">
+        You don"t have anything to read just yet.
+      </p>
+    );
+  },
+
   render: function() {
     return (
       <Panel title="Articles" bodyWrap={false}>
         <ul className="list-group">{
-          this.props.articles.map(function(article, i) {
+          this.props.articles.map(function(article) {
             return (
-              <li key={i} className="list-group-item">
+              <li key={article.id} className="list-group-item">
                 <ArticleEntry article={article} />
               </li>
             );
           })
         }</ul>
-        {this.props.articles.length === 0 ?
-          <p className="list-group-item">Your list is empty.</p> : null}
+        {this.renderEmptyListMessage()}
       </Panel>
     );
   }
