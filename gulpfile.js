@@ -23,6 +23,9 @@ var opt = {
     "node_modules/bootstrap/dist/css/bootstrap.css",
     "src/css/styles.css"
   ],
+  fontAssets: [
+    "node_modules/bootstrap/dist/fonts/*.*"
+  ],
   jsAssets: [
     "src/js/**/*.*"
   ],
@@ -42,7 +45,8 @@ var opt = {
  */
 gulp.task("assets", [
   "assets:html",
-  "assets:css"
+  "assets:css",
+  "assets:fonts"
 ]);
 
 gulp.task("assets:html", function() {
@@ -53,6 +57,11 @@ gulp.task("assets:html", function() {
 gulp.task("assets:css", function() {
   return gulp.src(opt.cssAssets)
     .pipe(gulp.dest(opt.outputFolder + "/css"));
+});
+
+gulp.task("assets:fonts", function() {
+  return gulp.src(opt.fontAssets)
+    .pipe(gulp.dest(opt.outputFolder + "/fonts"));
 });
 
 /**

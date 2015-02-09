@@ -3,6 +3,7 @@
 import React from "react/addons";
 import { ArticleActions } from "../flux";
 
+import Button from "./Button";
 import Panel from "./Panel";
 
 export default React.createClass({
@@ -12,19 +13,35 @@ export default React.createClass({
     return {title: "", url: ""};
   },
 
+  componentWillReceiveProps: function(nextProps) {
+    var current = nextProps.current || this.getInitialState();
+    this.setState({title: current.title, url: current.url});
+  },
+
   handleSubmit: function(event) {
     event.preventDefault();
-    ArticleActions.create({
+    var params = Object.assign({
+      id: this.props.current && this.props.current.id
+    }, {
       title: this.state.title,
       url: this.state.url,
       added_by: "niko" // XXX fixme
     });
+    if (this.props.current) {
+      ArticleActions.update(params);
+    } else {
+      ArticleActions.create(params);
+    }
     this.setState(this.getInitialState());
+  },
+
+  _getVerb: function() {
+    return this.props.current ? "Update" : "Add";
   },
 
   render: function() {
     return (
-      <Panel title="Add an article">
+      <Panel title={`${this._getVerb()} an article`}>
         <form method="post" onSubmit={this.handleSubmit}>
           <div className="form-group">
             <input className="form-control" type="text"
@@ -32,9 +49,10 @@ export default React.createClass({
           </div>
           <div className="form-group">
             <input className="form-control" type="url"
-                    placeholder="http://" valueLink={this.linkState("url")}/>
+                    placeholder="http://" valueLink={this.linkState("url")}
+                    disabled={!!this.props.current} />
           </div>
-          <button className="btn btn-default">Add</button>
+          <Button type="default" label={this._getVerb()} />
         </form>
       </Panel>
     );

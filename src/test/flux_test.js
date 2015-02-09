@@ -10,8 +10,8 @@ import { Dispatcher, ArticleStore, ArticleActions } from "../js/flux";
 describe("ArticleStore", function() {
   var sandbox;
 
-  var art1 = {url: "http://fake1", title: "Fake1", added_by: "User1"};
-  var art2 = {url: "http://fake2", title: "Fake2", added_by: "User2"};
+  var art1 = {id: 1, url: "http://fake1", title: "Fake1", added_by: "User1"};
+  var art2 = {id: 2, url: "http://fake2", title: "Fake2", added_by: "User2"};
 
   function createStore(api) {
     return new ArticleStore(api);
@@ -51,9 +51,7 @@ describe("ArticleStore", function() {
 
     it("should refresh the list on success", function(done) {
       sandbox.stub(ArticleActions, "list");
-      var store = createStore({
-        createArticle: returnPromise(fulfiller(art1))
-      });
+      createStore({createArticle: returnPromise(fulfiller(art1))});
 
       ArticleActions.create(art1);
 
@@ -64,11 +62,46 @@ describe("ArticleStore", function() {
 
     it("should update state with an error on failure", function(done) {
       sandbox.stub(ArticleActions, "list");
-      var store = createStore({
-        createArticle: returnPromise(rejecter("boo"))
-      });
+      var store = createStore({createArticle: returnPromise(rejecter("boo"))});
 
       ArticleActions.create(art1);
+
+      asyncAssert(done, function() {
+        expect(store.state.error).eql("boo");
+      });
+    });
+  });
+
+  describe("#update", function() {
+    it("should reset error state", function() {
+      var store = createStore({
+        updateArticle: returnPromise(fulfiller(art1))
+      });
+      sandbox.stub(store, "resetError");
+
+      ArticleActions.update(art1);
+
+      sinon.assert.called(store.resetError);
+    });
+
+    it("should refresh the list on success", function(done) {
+      sandbox.stub(ArticleActions, "list");
+      createStore({updateArticle: returnPromise(fulfiller(art1))});
+
+      ArticleActions.update(art1);
+
+      asyncAssert(done, function() {
+        sinon.assert.called(ArticleActions.list);
+      });
+    });
+
+    it("should update state with an error on failure", function(done) {
+      sandbox.stub(ArticleActions, "list");
+      var store = createStore({
+        updateArticle: returnPromise(rejecter("boo"))
+      });
+
+      ArticleActions.update(art1);
 
       asyncAssert(done, function() {
         expect(store.state.error).eql("boo");
@@ -90,9 +123,7 @@ describe("ArticleStore", function() {
 
     it("should refresh the list on success", function(done) {
       sandbox.stub(ArticleActions, "list");
-      var store = createStore({
-        deleteArticle: returnPromise(fulfiller(art1))
-      });
+      createStore({deleteArticle: returnPromise(fulfiller(art1))});
 
       ArticleActions.delete(art1);
 
@@ -111,6 +142,17 @@ describe("ArticleStore", function() {
 
       asyncAssert(done, function() {
         expect(store.state.error).eql("boo");
+      });
+    });
+
+    it.only("should update state current article if just deleted", function(done) {
+      var store = createStore({deleteArticle: returnPromise(fulfiller(art1))});
+      store.setState({current: art1});
+
+      ArticleActions.delete(art1);
+
+      asyncAssert(done, function() {
+        expect(store.state.current).to.be.a("null");
       });
     });
   });

@@ -1,0 +1,42 @@
+[
+    {
+        "added_by": "niko",
+        "added_on": 1423486853721,
+        "excerpt": "",
+        "favorite": false,
+        "id": "1fef36e41f2d4a61bbf336838df51f5a",
+        "is_article": true,
+        "last_modified": 1423486865121,
+        "marked_read_by": null,
+        "marked_read_on": null,
+        "read_position": 0,
+        "resolved_title": "Libé",
+        "resolved_url": "http://liberation.fr/",
+        "status": 0,
+        "stored_on": 1423486853721,
+        "title": "Libération",
+        "unread": true,
+        "url": "http://liberation.fr/",
+        "word_count": null
+    },
+    {
+        "added_by": "niko",
+        "added_on": 1423486842393,
+        "excerpt": "",
+        "favorite": false,
+        "id": "4c6a95bb2c7b4c2cace82e5a8191dd06",
+        "is_article": true,
+        "last_modified": 1423486842396,
+        "marked_read_by": null,
+        "marked_read_on": null,
+        "read_position": 0,
+        "resolved_title": "Le Monde",
+        "resolved_url": "http://lemonde.fr/",
+        "status": 0,
+        "stored_on": 1423486842393,
+        "title": "Le Monde",
+        "unread": true,
+        "url": "http://lemonde.fr/",
+        "word_count": null
+    }
+]

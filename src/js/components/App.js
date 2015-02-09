@@ -37,7 +37,7 @@ export default React.createClass({
             <ArticleList articles={this.state.articles} />
           </div>
           <div className="col-md-9">
-            <ArticleForm />
+            <ArticleForm current={this.state.current} />
           </div>
         </div>
       </div>

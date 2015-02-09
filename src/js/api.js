@@ -13,6 +13,13 @@ import basicAuth from "rest/interceptor/basicAuth";
  * https://github.com/mozilla-services/readinglist/wiki/API-Design-proposal
  */
 export default class API {
+  /**
+   * Constructor.
+   * @constructor
+   * @param  {String} baseUrl Server base URL.
+   * @param  {Object} options Options.
+   * @return {API}
+   */
   constructor(baseUrl, options={}) {
     this.baseUrl = baseUrl;
     this.client = options.client || this.createClient();
@@ -69,21 +76,27 @@ export default class API {
 
   /**
    * POST /articles
+   * @param {Object} entity The article entity.
    * @return {Promise}
    */
-  createArticle(fields) {
-    return this._wrap(this.client({method: "POST", path: "/articles", entity: fields}));
+  createArticle(entity={}) {
+    return this._wrap(this.client({
+      method: "POST",
+      path: "/articles",
+      entity: entity
+    }));
   }
 
   /**
    * GET /articles
-   * @param  {Object} options Request params.
+   * @param  {Object} filters Request filter parameters.
    * @return {Promise}
    */
-  listArticles(params={}) {
+  listArticles(filters={}) {
+    // TODO process filters
     var q = {
-      unread:   true,
-      _sort: "-last_modified"
+      unread: true,
+      _sort:  "-last_modified"
     };
     return this._wrap(this.client({
       path: "/articles",
@@ -97,7 +110,22 @@ export default class API {
    * @return {Promise}
    */
   getArticle(params={}) {
-    return this._wrap(this.client({path: `/article${params.id}`}));
+    return this._wrap(this.client({
+      path: `/articles/${params.id}`
+    }));
+  }
+
+  /**
+   * PATCH /articles/<id>
+   * @param  {Object} entity Updated entity.
+   * @return {Promise}
+   */
+  updateArticle(entity={}) {
+    return this._wrap(this.client({
+      method: "PATCH",
+      path: `/articles/${entity.id}`,
+      entity: entity
+    }));
   }
 
   /**

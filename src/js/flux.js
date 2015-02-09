@@ -7,6 +7,7 @@ export var Dispatcher = DocBrown.createDispatcher();
 export var ArticleActions = DocBrown.createActions(Dispatcher, [
   "create",
   "get",
+  "edit",
   "update",
   "delete",
   "list"
@@ -62,6 +63,10 @@ export var ArticleStore = DocBrown.createStore({
     this.setError(err, "get");
   },
 
+  edit: function(params) {
+    ArticleActions.get(params);
+  },
+
   update: function(params) {
     this.resetError();
     return this.api.updateArticle(params);
@@ -82,6 +87,8 @@ export var ArticleStore = DocBrown.createStore({
   },
 
   deleteSuccess: function(article) {
+    var current = this.state.current || {};
+    if (current.id === article.id) this.setState({current: null});
     ArticleActions.list();
   },
 
@@ -106,6 +113,9 @@ export var ArticleStore = DocBrown.createStore({
 function StoreRegistry() {
   var _stores = {};
   return {
+    clear: function() {
+      _stores = {};
+    },
     register: function(stores) {
       for (var name in stores) {
         if (this.has(name))

@@ -66,6 +66,12 @@ export function rejecter(...rest) {
   };
 }
 
+export function returns(what) {
+  return function() {
+    return what;
+  };
+}
+
 export function returnPromise(handler) {
-  return () => new Promise(handler);
+  return returns(new Promise(handler));
 }

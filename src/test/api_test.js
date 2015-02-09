@@ -95,7 +95,7 @@ describe("API", function() {
     var serverRespond;
 
     beforeEach(function() {
-      serverRespond = respondWith.bind(null, server, "GET /article/42");
+      serverRespond = respondWith.bind(null, server, "GET /articles/42");
     });
 
     it("should reject request when unauthenticated", function() {
@@ -113,7 +113,7 @@ describe("API", function() {
     var serverRespond;
 
     beforeEach(function() {
-      serverRespond = respondWith.bind(null, server, "DELETE /article/42");
+      serverRespond = respondWith.bind(null, server, "DELETE /articles/42");
     });
 
     it("should reject request when unauthenticated", function() {
@@ -124,6 +124,26 @@ describe("API", function() {
     it("should retrieve an article", function() {
       serverRespond({body: ""}); // response has an empty body
       return api.deleteArticle({id: 42}).should.become("");
+    });
+  });
+
+  describe("updateArticle", function() {
+    var serverRespond;
+
+    beforeEach(function() {
+      serverRespond = respondWith.bind(null, server, "PATCH /articles/42");
+    });
+
+    it("should reject request when unauthenticated", function() {
+      serverRespond({status: 401, body: fakeAuthError});
+      return api.updateArticle({title: "bar"}).should.be.rejectedWith(fakeAuthError.message);
+    });
+
+    it("should update an article", function() {
+      serverRespond({body: {title: "bar"}});
+      return api.updateArticle({id: 42}).should.become({
+        title: "bar"
+      });
     });
   });
 });

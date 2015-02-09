@@ -1,20 +1,18 @@
 "use strict";
 
 import React from "react/addons";
+import { addons as ReactAddons } from "react/addons";
 
 import ArticleEntry from "./ArticleEntry";
 import Panel from "./Panel";
 
 export default React.createClass({
-  shouldComponentUpdate: function(nextProps, nextState) {
-    // XXX this is odd.
-    return JSON.stringify(this.props) !== JSON.stringify(nextProps);
-  },
+  mixins: [ReactAddons.PureRenderMixin],
 
   renderEmptyListMessage: function() {
     if (this.props.articles.length > 0) return;
     return (
-      <p className="list-group-item">
+      <p className="list-empty list-group-item">
         You don't have anything to read just yet.
       </p>
     );
