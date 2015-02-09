@@ -4,6 +4,7 @@
 
 var gulp = require("gulp");
 var browserify = require('browserify');
+var envify = require('envify/custom');
 var watchify = require('watchify');
 var source = require('vinyl-source-stream');
 var to5ify = require('6to5ify');
@@ -18,6 +19,9 @@ var opt = {
     port: 4000,
     livereload: true,
     open: true
+  },
+  envifyVars: {
+    READINGLIST_SERVER_BASEURL: process.env.READINGLIST_SERVER_BASEURL
   },
   cssAssets: [
     "node_modules/bootstrap/dist/css/bootstrap.css",
@@ -84,6 +88,7 @@ gulp.task("js:app", ["js:vendors"], function() {
     .external("docbrown")
     .transform(to5ify)
     .transform("reactify")
+    .transform(envify(opt.envifyVars))
     .bundle()
     .pipe(source(opt.app.dest))
     .pipe(gulp.dest(opt.outputFolder + "/js"));
@@ -139,7 +144,8 @@ gulp.task("watchify", function() {
     .external("react/addons")
     .external("docbrown")
     .transform(to5ify)
-    .transform("reactify");
+    .transform("reactify")
+    .transform(envify(opt.envifyVars));
 
   function updateBundle(w) {
     return w.bundle()

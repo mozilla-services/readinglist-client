@@ -8,9 +8,11 @@ This is work in progress at a temporary location.
 Installation
 ------------
 
-Required nodejs v0.10.29+ and npm v2.1.0+.
+Requires nodejs v0.10.29+ and npm v2.1.0+. To install the required dependencies:
 
     $ npm install
+
+This Web client also requires a running instance of the [Readinglist server](https://github.com/mozilla-services/readinglist).
 
 Configuration
 -------------
@@ -18,6 +20,17 @@ Configuration
 You can configure the client using the following environment variables:
 
 - `READINGLIST_SERVER_BASEURL`: the Readinglist server base URL; default: `http://0.0.0.0:8000/v0`
+
+Environment variables will be used during the build step to replace matching placeholders in resulting js assets. That means if you want to override the default API base url running the local development server, you can run:
+
+    $ READINGLIST_SERVER_BASEURL=http://my.alt.domain.tld npm run dev
+
+Building & deploying
+--------------------
+
+    $ READINGLIST_SERVER_BASEURL="http://production.server.tld" npm run build
+
+Result is then available in the `build/` subfolder. This is what should be deployed to production.
 
 Local dev server
 ----------------
@@ -47,10 +60,3 @@ TDD
 This will launch a live Karma server watching and running tests on each source change.
 
     $ npm run tdd
-
-Building
---------
-
-    $ npm run build
-
-Note: Result is then available in the `build/` subfolder. This is what should be deployed to production.
