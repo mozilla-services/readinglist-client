@@ -1,7 +1,7 @@
 Readinglist client
 ==================
 
-[![Build Status](https://travis-ci.org/mozilla-services/readinglist-client.svg?branch=master)](https://travis-ci.org/mozilla-services/readinglist-client) [![Dependency Status](https://www.versioneye.com/user/projects/54c76b2d1a0071823a000580/badge.svg?style=flat)](https://www.versioneye.com/user/projects/54c76b2d1a0071823a000580)
+[![Build Status](https://travis-ci.org/mozilla-services/readinglist-client.svg?branch=master)](https://travis-ci.org/mozilla-services/readinglist-client) [![Dependency Status](https://www.versioneye.com/user/projects/54d8751237de4a036f000002/badge.svg?style=flat)](https://www.versioneye.com/user/projects/54d8751237de4a036f000002)
 
 This is work in progress at a temporary location.
 
