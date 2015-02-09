@@ -15,7 +15,7 @@ export default React.createClass({
     if (this.props.articles.length > 0) return;
     return (
       <p className="list-group-item">
-        You don"t have anything to read just yet.
+        You don't have anything to read just yet.
       </p>
     );
   },
