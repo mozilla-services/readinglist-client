@@ -145,7 +145,7 @@ describe("ArticleStore", function() {
       });
     });
 
-    it.only("should update state current article if just deleted", function(done) {
+    it("should update state current article if just deleted", function(done) {
       var store = createStore({deleteArticle: returnPromise(fulfiller(art1))});
       store.setState({current: art1});
 
