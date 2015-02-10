@@ -3,20 +3,36 @@
 import React from "react/addons";
 import { addons as ReactAddons } from "react/addons";
 
+import { ArticleActions } from "../flux";
+
 import ArticleEntry from "./ArticleEntry";
+import Button from "./Button";
 import Panel from "./Panel";
+
+var EmptyListInfo = React.createClass({
+  mixins: [ReactAddons.PureRenderMixin],
+
+  handleImportSampleClick: function() {
+    ArticleActions.import();
+  },
+
+  render: function() {
+    return (
+      <div className="list-empty text-center">
+        <p>
+          You don't have anything to read just yet.
+        </p>
+        <p>
+          <Button type="info" label="Import sample articles"
+                  onClick={this.handleImportSampleClick} />
+        </p>
+      </div>
+    );
+  }
+});
 
 export default React.createClass({
   mixins: [ReactAddons.PureRenderMixin],
-
-  renderEmptyListMessage: function() {
-    if (this.props.articles.length > 0) return;
-    return (
-      <p className="list-empty list-group-item">
-        You don't have anything to read just yet.
-      </p>
-    );
-  },
 
   render: function() {
     return (
@@ -30,7 +46,7 @@ export default React.createClass({
             );
           })
         }</ul>
-        {this.renderEmptyListMessage()}
+        {!this.props.articles.length ? <EmptyListInfo/> : null}
       </Panel>
     );
   }

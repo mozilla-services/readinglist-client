@@ -3,7 +3,7 @@
 import { expect } from "chai";
 import sinon from "sinon";
 
-import { asyncAssert, returnPromise, fulfiller, rejecter } from "./utils";
+import { asyncAssert, returns, returnPromise, fulfiller, rejecter } from "./utils";
 
 import { Dispatcher, ArticleStore, ArticleActions } from "../js/flux";
 
@@ -26,7 +26,7 @@ describe("ArticleStore", function() {
     sandbox.restore();
   });
 
-  describe("#constructor", function() {
+  describe("#constructor()", function() {
     it("should set initial state by default", function() {
       var store = createStore({});
 
@@ -37,7 +37,7 @@ describe("ArticleStore", function() {
     });
   });
 
-  describe("#create", function() {
+  describe("#create()", function() {
     it("should reset error state", function() {
       var store = createStore({
         createArticle: returnPromise(fulfiller(art1))
@@ -72,7 +72,7 @@ describe("ArticleStore", function() {
     });
   });
 
-  describe("#update", function() {
+  describe("#update()", function() {
     it("should reset error state", function() {
       var store = createStore({
         updateArticle: returnPromise(fulfiller(art1))
@@ -109,7 +109,7 @@ describe("ArticleStore", function() {
     });
   });
 
-  describe("#delete", function() {
+  describe("#delete()", function() {
     it("should reset error state", function() {
       var store = createStore({
         deleteArticle: returnPromise(fulfiller(art1))
@@ -157,7 +157,7 @@ describe("ArticleStore", function() {
     });
   });
 
-  describe("#get", function() {
+  describe("#get()", function() {
     it("should reset error state", function() {
       var store = createStore({
         getArticle: returnPromise(fulfiller(art1))
@@ -194,7 +194,7 @@ describe("ArticleStore", function() {
     });
   });
 
-  describe("#list", function() {
+  describe("#list()", function() {
     it("should reset error state", function() {
       var store = createStore({
         listArticles: returnPromise(fulfiller([art1, art2]))
@@ -228,6 +228,50 @@ describe("ArticleStore", function() {
       asyncAssert(done, function() {
         expect(store.state.error).eql("boo");
       });
+    });
+  });
+
+  describe("#import()", function() {
+    it("should reset error state", function() {
+      var store = createStore({
+        createBatch: returns({
+          createArticle: returns({
+            process: sinon.spy()
+          })
+        })
+      });
+      sandbox.stub(store, "resetError");
+
+      ArticleActions.import();
+
+      sinon.assert.called(store.resetError);
+    });
+  });
+
+  describe("#importSuccess()", function() {
+    it("should refresh the list", function() {
+      sandbox.stub(ArticleActions, "list");
+
+      createStore({}).importSuccess({
+        responses: [{
+          status: 201,
+          body: {
+            title: "foo"
+          }
+        }]
+      });
+
+      sinon.assert.calledOnce(ArticleActions.list);
+    });
+  });
+
+  describe("#importError()", function() {
+    it("should update error state", function() {
+      var store = createStore({});
+
+      store.importError({message: "boo"});
+
+      expect(store.state.error).eql({message: "boo"});
     });
   });
 });

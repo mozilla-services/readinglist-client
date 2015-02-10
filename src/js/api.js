@@ -1,5 +1,7 @@
 "use strict";
 
+import Batch from "./batch";
+
 import rest from "rest";
 import pathPrefix from "rest/interceptor/pathPrefix";
 import mime from "rest/interceptor/mime";
@@ -137,6 +139,32 @@ export default class API {
     return this._wrap(this.client({
       method: "DELETE",
       path: `/articles/${params.id}`
+    }));
+  }
+
+  /**
+   * Creates a new batch processor.
+   * @return {Batch}
+   */
+  createBatch(defaults={}) {
+    return new Batch(this, defaults);
+  }
+
+  /**
+   * POST /batch
+   *
+   * Note: Use the createBatch() method to benefit from a more convenient API to
+   * enqueue requests.
+   *
+   * @see    Batch
+   * @param  {Object} query The batch query object.
+   * @return {Promise}
+   */
+  batch(query) {
+    return this._wrap(this.client({
+      method: "POST",
+      path: "/batch",
+      entity: query
     }));
   }
 }

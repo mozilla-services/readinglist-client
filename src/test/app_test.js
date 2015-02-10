@@ -61,7 +61,31 @@ describe("ArticleList", function() {
     var view = TestUtils.renderIntoDocument(
       <ArticleList articles={[]} />);
 
-    expect($$(view, ".list-empty")).not.eql(null);
+    expect($(view, ".list-empty")).not.eql(null);
+  });
+
+  it("should render an import button when the list is empty", function() {
+    var view = TestUtils.renderIntoDocument(
+      <ArticleList articles={[]} />);
+
+    expect($(view, ".list-empty button")).not.eql(null);
+  });
+
+  it("should not render an import button when the list is non-empty", function() {
+    var view = TestUtils.renderIntoDocument(
+      <ArticleList articles={fakeArticleList} />);
+
+    expect($(view, ".list-empty button")).eql(null);
+  });
+
+  it("should trigger the import action when clicking on the import button", function() {
+    sandbox.stub(ArticleActions, "import");
+    var view = TestUtils.renderIntoDocument(
+      <ArticleList articles={[]} />);
+
+    TestUtils.Simulate.click($(view, ".list-empty button"));
+
+    sinon.assert.calledOnce(ArticleActions.import);
   });
 });
 

@@ -5,6 +5,7 @@ import { respondWith } from "./utils";
 import sinon from "sinon";
 
 import API from "../js/api";
+import Batch from "../js/batch";
 
 describe("API", function() {
   var sandbox, server, api, baseUrl = "http://localhost:8000/v0";
@@ -35,7 +36,7 @@ describe("API", function() {
     sandbox.restore();
   });
 
-  describe("hello", function() {
+  describe("#hello()", function() {
     var serverRespond;
 
     beforeEach(function() {
@@ -53,7 +54,7 @@ describe("API", function() {
     });
   });
 
-  describe("createArticle", function() {
+  describe("#createArticle()", function() {
     var serverRespond;
     var articleData = sampleArticleData;
 
@@ -72,7 +73,7 @@ describe("API", function() {
     });
   });
 
-  describe("listArticles", function() {
+  describe("#listArticles()", function() {
     var serverRespond;
     var articles = [sampleArticleData];
 
@@ -91,7 +92,7 @@ describe("API", function() {
     });
   });
 
-  describe("getArticle", function() {
+  describe("#getArticle()", function() {
     var serverRespond;
 
     beforeEach(function() {
@@ -109,7 +110,7 @@ describe("API", function() {
     });
   });
 
-  describe("deleteArticle", function() {
+  describe("#deleteArticle()", function() {
     var serverRespond;
 
     beforeEach(function() {
@@ -127,7 +128,7 @@ describe("API", function() {
     });
   });
 
-  describe("updateArticle", function() {
+  describe("#updateArticle()", function() {
     var serverRespond;
 
     beforeEach(function() {
@@ -144,6 +145,30 @@ describe("API", function() {
       return api.updateArticle({id: 42}).should.become({
         title: "bar"
       });
+    });
+  });
+
+  describe("#createBatch()", function() {
+    it("should return a new Batch instance", function() {
+      expect(api.createBatch()).to.be.an.instanceOf(Batch);
+    });
+  });
+
+  describe("#batch()", function() {
+    var serverRespond;
+
+    beforeEach(function() {
+      serverRespond = respondWith.bind(null, server, "POST /batch");
+    });
+
+    it("should reject request when unauthenticated", function() {
+      serverRespond({status: 401, body: fakeAuthError});
+      return api.batch({}).should.be.rejectedWith(fakeAuthError.message);
+    });
+
+    it("should return the list of batch operations", function() {
+      serverRespond({body: {sample: true}});
+      return api.batch({}).should.become({sample: true});
     });
   });
 });

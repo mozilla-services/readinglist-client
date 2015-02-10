@@ -32,6 +32,9 @@ var opt = {
   htmlAssets: [
     "src/index.html"
   ],
+  dataAssets: [
+    "src/data/**/*.*"
+  ],
   app: {
     src: "./src/js/main.js",
     dest: "bundle.js"
@@ -45,12 +48,18 @@ var opt = {
  */
 gulp.task("assets", [
   "assets:html",
+  "assets:data",
   "assets:css",
   "assets:fonts"
 ]);
 
 gulp.task("assets:html", function() {
   return gulp.src(opt.htmlAssets)
+    .pipe(gulp.dest(opt.outputFolder));
+});
+
+gulp.task("assets:data", function() {
+  return gulp.src(opt.dataAssets)
     .pipe(gulp.dest(opt.outputFolder));
 });
 
@@ -152,6 +161,7 @@ gulp.task("watchify", function() {
  */
 gulp.task("watch", ["assets", "js:vendors", "watchify"], function() {
   gulp.watch(opt.cssAssets,  ["assets:css"]);
+  gulp.watch(opt.dataAssets, ["assets:data"]);
   gulp.watch(opt.fontAssets, ["assets:fonts"]);
   gulp.watch(opt.htmlAssets, ["assets:html"]);
 });

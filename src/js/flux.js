@@ -1,7 +1,7 @@
 "use strict";
 
 import DocBrown from "docbrown";
-
+import sampleArticles from "../data/samples.json";
 export var Dispatcher = DocBrown.createDispatcher();
 
 export var ArticleActions = DocBrown.createActions(Dispatcher, [
@@ -10,7 +10,8 @@ export var ArticleActions = DocBrown.createActions(Dispatcher, [
   "edit",
   "update",
   "delete",
-  "list"
+  "list",
+  "import"
 ]);
 
 export var ArticleStore = DocBrown.createStore({
@@ -108,6 +109,26 @@ export var ArticleStore = DocBrown.createStore({
   listError: function(err) {
     this.setError(err, "list");
   },
+
+  import: function() {
+    this.resetError();
+    // We use the batch API mostly for testing purpose; we could simply append
+    // sample articles to the current list instead :)
+    var batch = this.api.createBatch();
+    return batch.createArticle.apply(batch, sampleArticles).process();
+  },
+
+  importSuccess: function(response) {
+    // XXX We want proper notification messages displayed to the end user here
+    response.responses.forEach(function(response) {
+      console.log("imported", response.body.title, "HTTP", response.status);
+    });
+    ArticleActions.list();
+  },
+
+  importError: function(err) {
+    this.setError(err, "import");
+  }
 });
 
 function StoreRegistry() {
