@@ -41,7 +41,7 @@ export default React.createClass({
           this.props.articles.map(function(article) {
             return (
               <li key={article.id} className="list-group-item">
-                <ArticleEntry article={article} />
+                <ArticleEntry {...article} />
               </li>
             );
           })
