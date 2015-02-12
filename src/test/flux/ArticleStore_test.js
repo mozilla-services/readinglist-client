@@ -3,9 +3,9 @@
 import { expect } from "chai";
 import sinon from "sinon";
 
-import { asyncAssert, returns, returnPromise, fulfiller, rejecter } from "./utils";
+import { asyncAssert, returns, returnPromise, fulfiller, rejecter } from "../utils";
 
-import { Dispatcher, ArticleStore, ArticleActions } from "../js/flux";
+import { Dispatcher, ArticleStore, ArticleActions } from "../../js/flux";
 
 describe("ArticleStore", function() {
   var sandbox;

@@ -10,6 +10,7 @@ import { ArticleActions, stores } from "../flux";
 import Alert from "./Alert";
 import ArticleForm from "./ArticleForm";
 import ArticleList from "./ArticleList";
+import Auth from "./Auth";
 
 export default React.createClass({
   mixins: [DocBrown.storeMixin(stores.getter("articleStore"))],
@@ -34,6 +35,7 @@ export default React.createClass({
         {this.renderError()}
         <div className="row">
           <div className="col-md-3">
+            <Auth />
             <ArticleList articles={this.state.articles} />
           </div>
           <div className="col-md-9">

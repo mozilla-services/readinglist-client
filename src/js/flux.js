@@ -2,7 +2,39 @@
 
 import DocBrown from "docbrown";
 import sampleArticles from "../data/samples.json";
+
 export var Dispatcher = DocBrown.createDispatcher();
+
+export var AuthActions = DocBrown.createActions(Dispatcher, [
+  "signin",
+  "signout",
+  "checkAuth"
+]);
+
+export var AuthStore = DocBrown.createStore({
+  actions: [AuthActions],
+
+  initialize: function(api) {
+    this.api = api;
+  },
+
+  getInitialState: function() {
+    return {authToken: null};
+  },
+
+  signin: function() {
+    this.api.signinToFxA();
+  },
+
+  checkAuth: function() {
+    this.setState({authToken: this.api.checkAuth()});
+  },
+
+  signout: function() {
+    this.api.signout();
+    this.setState(this.getInitialState());
+  }
+});
 
 export var ArticleActions = DocBrown.createActions(Dispatcher, [
   "create",
