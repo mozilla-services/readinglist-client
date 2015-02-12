@@ -99,7 +99,7 @@ describe("ArticleEntry", function() {
   };
 
   beforeEach(function() {
-    view = TestUtils.renderIntoDocument(<ArticleEntry article={fakeArticle} />);
+    view = TestUtils.renderIntoDocument(<ArticleEntry {...fakeArticle} />);
   });
 
   it("should render article title", function() {
