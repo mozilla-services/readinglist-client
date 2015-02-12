@@ -28,6 +28,7 @@
     "bootstrap": "^3.3.2",
     "browserify": "^8.1.*",
     "docbrown": "^0.5.*",
+    "envify": "^3.2.0",
     "gulp": "^3.8.*",
     "gulp-uglify": "^1.1.*",
     "gulp-webserver": "^0.9.*",
