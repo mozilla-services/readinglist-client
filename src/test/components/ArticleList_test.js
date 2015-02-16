@@ -30,6 +30,23 @@ describe("ArticleList tests", function() {
       expect($$(view, "li")).to.have.length.of(2);
     });
 
+    it("should render an add button", function() {
+      var view = TestUtils.renderIntoDocument(
+        <ArticleList articles={[]} />);
+
+      expect($(view, "button.btn-add")).not.eql(null);
+    });
+
+    it("should trigger the add action when clicking on the add button", function() {
+      sandbox.stub(ArticleActions, "add");
+      var view = TestUtils.renderIntoDocument(
+        <ArticleList articles={[]} />);
+
+      TestUtils.Simulate.click($(view, "button.btn-add"));
+
+      sinon.assert.calledOnce(ArticleActions.add);
+    });
+
     it("should render a message when the list is empty", function() {
       var view = TestUtils.renderIntoDocument(
         <ArticleList articles={[]} />);
@@ -41,14 +58,14 @@ describe("ArticleList tests", function() {
       var view = TestUtils.renderIntoDocument(
         <ArticleList articles={[]} />);
 
-      expect($(view, ".list-empty button")).not.eql(null);
+      expect($(view, "button.btn-import")).not.eql(null);
     });
 
     it("should not render an import button when the list is non-empty", function() {
       var view = TestUtils.renderIntoDocument(
         <ArticleList articles={fakeArticleList} />);
 
-      expect($(view, ".list-empty button")).eql(null);
+      expect($(view, "button.btn-import")).eql(null);
     });
 
     it("should trigger the import action when clicking on the import button", function() {
@@ -56,7 +73,7 @@ describe("ArticleList tests", function() {
       var view = TestUtils.renderIntoDocument(
         <ArticleList articles={[]} />);
 
-      TestUtils.Simulate.click($(view, ".list-empty button"));
+      TestUtils.Simulate.click($(view, "button.btn-import"));
 
       sinon.assert.calledOnce(ArticleActions.import);
     });

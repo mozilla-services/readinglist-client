@@ -9,6 +9,11 @@ import Button from "./Button";
 export default React.createClass({
   mixins: [ReactAddons.PureRenderMixin],
 
+  handleOpenClick: function(event) {
+    event.preventDefault();
+    ArticleActions.open(this.props);
+  },
+
   handleDeleteClick: function() {
     if (confirm("Are you sure?")) {
       ArticleActions.delete(this.props);
@@ -27,13 +32,16 @@ export default React.createClass({
     return (
       <div className="ArticleEntry row">
         <h4 className="ArticleEntry__h4 col-md-12">
-          <a href={this.props.url}>{this.props.title}</a>
+          <a href={this.props.url} onClick={this.handleOpenClick}>
+            {this.props.title}
+          </a>
           <sup>{this.props.unread ? "unread" : ""}</sup>
         </h4>
         <p className="ArticleEntry__info col-md-9">
           {`Added by ${this.props.added_by} on ${this._formattedAddedOn()}`}
         </p>
-        <div className="ArticleEntry__actions col-md-3 btn-group" role="group" aria-label="Actions">
+        <div className="ArticleEntry__actions col-md-3 text-right"
+             role="group" aria-label="Actions">
           <Button type="info" size="xs" onClick={this.handleEditClick} icon="pencil" />
           <Button type="danger" size="xs" onClick={this.handleDeleteClick} icon="trash"
                   disabled={this.props.status === 2} />

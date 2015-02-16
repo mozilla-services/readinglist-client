@@ -31,7 +31,7 @@ describe("ArticleForm tests", function() {
     };
 
     beforeEach(function() {
-      view = TestUtils.renderIntoDocument(<ArticleForm />);
+      view = TestUtils.renderIntoDocument(<ArticleForm show={true} />);
     });
 
     it("should load an empty form by default", function() {

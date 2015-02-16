@@ -36,27 +36,43 @@ export var AuthStore = DocBrown.createStore({
   }
 });
 
+export var ArticleFormActions = DocBrown.createActions(Dispatcher, [
+  "add",
+  "edit"
+]);
+
 export var ArticleActions = DocBrown.createActions(Dispatcher, [
+  "add",
   "create",
-  "get",
   "edit",
+  "cancelEdit",
+  "get",
   "update",
   "delete",
   "list",
-  "import"
+  "import",
+  "open",
+  "close",
+  "markAsRead"
 ]);
 
 export var ArticleStore = DocBrown.createStore({
   actions: [ArticleActions],
 
-  initialize: function(api) {
+  initialize: function(api, options={debug: false}) {
     this.api = api;
+    if (options.debug) {
+      this.subscribe(function(state) {
+        console.info("ArticleStore state changed", state);
+      });
+    }
   },
 
   getInitialState: function() {
     return {
       articles: [],
       current: null,
+      edit: false,
       error: null,
       errorType: null
     };
@@ -68,6 +84,10 @@ export var ArticleStore = DocBrown.createStore({
 
   setError: function(error, type=null) {
     this.setState({error: error, errType: type});
+  },
+
+  add: function() {
+    this.setState({edit: true, current: null});
   },
 
   create: function(params) {
@@ -83,6 +103,14 @@ export var ArticleStore = DocBrown.createStore({
     this.setError(err, "create");
   },
 
+  edit: function(article) {
+    this.setState({edit: true, current: article});
+  },
+
+  cancelEdit: function() {
+    this.setState({edit: false});
+  },
+
   get: function(params) {
     this.resetError();
     return this.api.getArticle(params);
@@ -96,11 +124,8 @@ export var ArticleStore = DocBrown.createStore({
     this.setError(err, "get");
   },
 
-  edit: function(params) {
-    ArticleActions.get(params);
-  },
-
   update: function(params) {
+    this.setState({edit: false});
     this.resetError();
     return this.api.updateArticle(params);
   },
@@ -110,7 +135,7 @@ export var ArticleStore = DocBrown.createStore({
   },
 
   updateSuccess: function(article) {
-    this.setState({current: article});
+    this.setState({edit: false, current: article});
     ArticleActions.list();
   },
 
@@ -121,7 +146,7 @@ export var ArticleStore = DocBrown.createStore({
 
   deleteSuccess: function(article) {
     var current = this.state.current || {};
-    if (current.id === article.id) this.setState({current: null});
+    if (current.id === article.id) this.setState({current: null, edit: false});
     ArticleActions.list();
   },
 
@@ -160,6 +185,18 @@ export var ArticleStore = DocBrown.createStore({
 
   importError: function(err) {
     this.setError(err, "import");
+  },
+
+  open: function(article) {
+    this.setState({edit: false, current: article});
+  },
+
+  close: function() {
+    this.setState({current: null});
+  },
+
+  markAsRead: function(article) {
+    // XXX todo
   }
 });
 

@@ -37,6 +37,23 @@ describe("ArticleStore", function() {
     });
   });
 
+  describe("#add()", function() {
+    var store;
+
+    beforeEach(function() {
+      store = createStore({});
+      store.add();
+    });
+
+    it("should enable edit mode", function() {
+      expect(store.state.edit).eql(true);
+    });
+
+    it("should reset current article", function() {
+      expect(store.state.current).eql(null);
+    });
+  });
+
   describe("#create()", function() {
     it("should reset error state", function() {
       var store = createStore({
@@ -72,6 +89,36 @@ describe("ArticleStore", function() {
     });
   });
 
+  describe("#edit()", function() {
+    var store;
+
+    beforeEach(function() {
+      store = createStore({});
+      store.edit(art1);
+    });
+
+    it("should enable edit mode", function() {
+      expect(store.state.edit).eql(true);
+    });
+
+    it("should set current article", function() {
+      expect(store.state.current).eql(art1);
+    });
+  });
+
+  describe("#cancelEdit()", function() {
+    var store;
+
+    beforeEach(function() {
+      store = createStore({});
+      store.cancelEdit();
+    });
+
+    it("should disable edit mode", function() {
+      expect(store.state.edit).eql(false);
+    });
+  });
+
   describe("#update()", function() {
     it("should reset error state", function() {
       var store = createStore({
@@ -92,6 +139,18 @@ describe("ArticleStore", function() {
 
       asyncAssert(done, function() {
         sinon.assert.called(ArticleActions.list);
+      });
+    });
+
+    it("should disable edit mode on success", function(done) {
+      sandbox.stub(ArticleActions, "list");
+      var store = createStore({updateArticle: returnPromise(fulfiller(art1))});
+      store.setState({edit: true, current: art1});
+
+      ArticleActions.update(art1);
+
+      asyncAssert(done, function() {
+        expect(store.state.edit).eql(false);
       });
     });
 
@@ -129,6 +188,18 @@ describe("ArticleStore", function() {
 
       asyncAssert(done, function() {
         sinon.assert.called(ArticleActions.list);
+      });
+    });
+
+    it("should disable edit mode on success", function(done) {
+      sandbox.stub(ArticleActions, "list");
+      var store = createStore({deleteArticle: returnPromise(fulfiller(art1))});
+      store.setState({edit: true, current: art1});
+
+      ArticleActions.delete(art1);
+
+      asyncAssert(done, function() {
+        expect(store.state.edit).eql(false);
       });
     });
 

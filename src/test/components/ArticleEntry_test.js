@@ -54,6 +54,15 @@ describe("ArticleEntry tests", function() {
       expect($(view, "button.btn-danger").href).not.eql(null);
     });
 
+    it("should call the open action when clicking the title", function() {
+      sandbox.stub(ArticleActions, "open");
+
+      TestUtils.Simulate.click($(view, "h4 a"));
+
+      sinon.assert.calledOnce(ArticleActions.open);
+      sinon.assert.calledWithExactly(ArticleActions.open, fakeArticle);
+    });
+
     it("should call the edit action on click on the edit button", function() {
       sandbox.stub(ArticleActions, "edit");
 

@@ -6,6 +6,19 @@ import { ArticleActions } from "../flux";
 import Button from "./Button";
 import Panel from "./Panel";
 
+var CloseButton = React.createClass({
+  handleClick: function() {
+    ArticleActions.cancelEdit();
+  },
+
+  render: function() {
+    return (
+      <Button type="default" size="xs" icon="remove" title="Close this form"
+              onClick={this.handleClick} />
+    );
+  }
+});
+
 export default React.createClass({
   mixins: [React.addons.LinkedStateMixin],
 
@@ -40,8 +53,10 @@ export default React.createClass({
   },
 
   render: function() {
+    if (!this.props.show)
+      return null;
     return (
-      <Panel title={`${this._getVerb()} an article`}>
+      <Panel title={`${this._getVerb()} an article`} actionButtons={[<CloseButton />]}>
         <form method="post" onSubmit={this.handleSubmit}>
           <div className="form-group">
             <input className="form-control" type="text"

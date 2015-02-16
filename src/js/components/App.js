@@ -11,6 +11,7 @@ import Alert from "./Alert";
 import ArticleForm from "./ArticleForm";
 import ArticleList from "./ArticleList";
 import Auth from "./Auth";
+import Viewer from "./Viewer";
 
 export default React.createClass({
   mixins: [DocBrown.storeMixin(stores.getter("articleStore"))],
@@ -20,12 +21,9 @@ export default React.createClass({
   },
 
   renderError: function() {
-    if (!this.state.error) return;
-    return (
-      <Alert title="Error">
-        <p>{this.state.error.message}</p>
-      </Alert>
-    );
+    // XXX we'd rather want a notification list here.
+    if (this.state.error)
+      return <Alert>{this.state.error.message}</Alert>;
   },
 
   render: function() {
@@ -39,7 +37,8 @@ export default React.createClass({
             <ArticleList articles={this.state.articles} />
           </div>
           <div className="col-md-9">
-            <ArticleForm current={this.state.current} />
+            <ArticleForm show={this.state.edit} current={this.state.current} />
+            {this.state.current ? <Viewer {...this.state.current} /> : null}
           </div>
         </div>
       </div>
