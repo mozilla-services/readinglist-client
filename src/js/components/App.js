@@ -29,7 +29,7 @@ export default React.createClass({
   render: function() {
     return (
       <div className="container-fluid">
-        <h1>Readinglist</h1>
+        <h1><a href="./">Readinglist</a></h1>
         {this.renderError()}
         <div className="row">
           <div className="col-md-3">
