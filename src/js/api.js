@@ -11,7 +11,7 @@ import hateoas from "rest/interceptor/hateoas";
 import interceptor from "rest/interceptor";
 
 export const AUTH_TOKEN_KEYNAME = "readinglist:auth:token";
-
+export const MAX_ITEMS_PER_PAGE = process.env.MAX_ITEMS_PER_PAGE || 10;
 /**
  * FxA auth custom interceptor.
  * @link https://github.com/cujojs/rest/blob/master/docs/interceptors.md#custom-interceptors
@@ -41,9 +41,11 @@ export default class API {
    */
   constructor(baseUrl, options={}) {
     this.baseUrl = baseUrl;
+    this.debug = !!options.debug;
     this.client = options.client || this.createClient();
     this.window = options.window || window;
     this._authToken = null;
+    this._nextPageUrl = null;
   }
 
   /**
@@ -63,7 +65,16 @@ export default class API {
       //  "error":"Unauthorized"}
       throw Object.assign(new Error(), res.entity);
     }).then(res => {
-      // Get rid of the .entity intermediate property.
+      // Ensure we have a headers object (useful for tests).
+      var headers = res.headers || {};
+      // Pagination headers.
+      if (headers["Next-Page"]) {
+        this._nextPageUrl = headers["Next-Page"];
+      }
+      if (this.debug) {
+        console.info("API response", res);
+      }
+      // Get rid of the .entity intermediate property
       return res.entity;
     });
   }
@@ -167,15 +178,41 @@ export default class API {
    * @return {Promise}
    */
   listArticles(filters={}) {
+    this._nextPageUrl = null;
     // TODO process filters
     var q = {
       unread: true,
-      _sort:  "-last_modified"
+      _sort:  "-last_modified",
+      _limit: MAX_ITEMS_PER_PAGE
     };
     return this._wrap(this.client({
       path: "/articles",
       params: q
     })).then(res => res.items);
+  }
+
+  /**
+   * Checks if there's a next page available for current article list.
+   * @return {Boolean}
+   */
+  hasNext() {
+    return !!this._nextPageUrl;
+  }
+
+  /**
+   * Fetches next batch of articles from last fetched Next-Page header value, if
+   * any.
+   * @return {Promise}
+   */
+  listNext() {
+    if (!this.hasNext()) {
+      return new Promise(function(_, reject) {
+        reject(new Error("No next articles page."));
+      });
+    }
+    var nextPageUrl = this._nextPageUrl;
+    this._nextPageUrl = null;
+    return this._wrap(this.client({path: nextPageUrl})).then(res => res.items);
   }
 
   /**

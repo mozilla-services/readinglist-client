@@ -208,6 +208,72 @@ describe("API", function() {
 
       return api.listArticles({}).should.become(articles);
     });
+
+    it("should clear any previously stored Next-Page header value", function() {
+      api._nextPageUrl = "http://invalid.next/";
+
+      api.listArticles();
+
+      expect(api.hasNext()).eql(false);
+    });
+
+    it("should intercept and store new Next-Page header value", function(done) {
+      serverRespond({
+        headers: {"Next-Page": "http://invalid.next/"},
+        body:    {items: articles}
+      });
+
+      api.listArticles().then(function() {
+        expect(api._nextPageUrl).eql("http://invalid.next/");
+        done();
+      });
+    });
+  });
+
+  describe("#hasNext()", function() {
+    it("should check if next page is known", function() {
+      api._nextPageUrl = "http://invalid.next/";
+
+      expect(api.hasNext()).eql(true);
+    });
+
+    it("should check if next page is unknown", function() {
+      api._nextPageUrl = null;
+
+      expect(api.hasNext()).eql(false);
+    });
+  });
+
+  describe("#listNext()", function() {
+    var serverRespond;
+    var articles = [sampleArticleData];
+
+    beforeEach(function() {
+      serverRespond = respondWith.bind(null, server, "GET /articles");
+    });
+
+    it("should raise an error if no next page is known", function() {
+      return api.listNext().should.be.rejectedWith(Error, /No next articles page/);
+    });
+
+    it("should fetch the next page url", function(done) {
+      api._nextPageUrl = "http://invalid.next/";
+
+      serverRespond({body: {items: articles}});
+
+      api.listNext().then(function() {
+        expect(sandbox.server.requests[0].url).eql("http://invalid.next/");
+        done();
+      });
+    });
+
+    it("should return articles", function() {
+      api._nextPageUrl = "http://invalid.next/";
+
+      serverRespond({body: {items: articles}});
+
+      return api.listNext().should.become(articles);
+    });
   });
 
   describe("#getArticle()", function() {

@@ -2,6 +2,10 @@
   padding: .8em 0 .5em 0;
 }
 
+.list-pages {
+  padding: .7em .5em 0 0;
+}
+
 .panel-actions button, .ArticleEntry__actions button {
   margin-left: .4em;
 }

@@ -34,7 +34,8 @@ export default React.createClass({
         <div className="row">
           <div className="col-md-3">
             <Auth />
-            <ArticleList articles={this.state.articles} />
+            <ArticleList articles={this.state.articles}
+                         hasNext={this.state.hasNext} />
           </div>
           <div className="col-md-9">
             <ArticleForm show={this.state.edit} current={this.state.current} />

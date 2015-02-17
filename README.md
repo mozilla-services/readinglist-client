@@ -19,9 +19,11 @@ Configuration
 
 You can configure the client using the following environment variables:
 
-- `READINGLIST_SERVER_BASEURL`: the Readinglist server base URL; default: `http://0.0.0.0:8000/v0`
+- `MAX_ITEMS_PER_PAGE`: The maximum number of articles per result page; default: `10`.
+- `NODE_ENV`: The nodejs environment name; default: `production`.
+- `READINGLIST_SERVER_BASEURL`: the Readinglist server base URL; default: `http://0.0.0.0:8000/v0`.
 
-Environment variables will be used during the build step to replace matching placeholders in resulting js assets. That means if you want to override the default API base url running the local development server, you can run:
+Environment variables will be used during the build step to replace matching placeholders in resulting js assets. Eg. that means if you want to override the default API base url running the local development server, you can run:
 
     $ READINGLIST_SERVER_BASEURL=http://my.alt.domain.tld npm run dev
 

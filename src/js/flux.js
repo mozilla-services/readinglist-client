@@ -14,8 +14,13 @@ export var AuthActions = DocBrown.createActions(Dispatcher, [
 export var AuthStore = DocBrown.createStore({
   actions: [AuthActions],
 
-  initialize: function(api) {
+  initialize: function(api, options={debug: false}) {
     this.api = api;
+    if (options.debug) {
+      this.subscribe(function(state) {
+        console.info("AuthStore state changed", state);
+      });
+    }
   },
 
   getInitialState: function() {
@@ -36,11 +41,6 @@ export var AuthStore = DocBrown.createStore({
   }
 });
 
-export var ArticleFormActions = DocBrown.createActions(Dispatcher, [
-  "add",
-  "edit"
-]);
-
 export var ArticleActions = DocBrown.createActions(Dispatcher, [
   "add",
   "create",
@@ -50,6 +50,7 @@ export var ArticleActions = DocBrown.createActions(Dispatcher, [
   "update",
   "delete",
   "list",
+  "listNext",
   "import",
   "open",
   "close",
@@ -74,7 +75,8 @@ export var ArticleStore = DocBrown.createStore({
       current: null,
       edit: false,
       error: null,
-      errorType: null
+      errorType: null,
+      hasNext: false,
     };
   },
 
@@ -160,11 +162,24 @@ export var ArticleStore = DocBrown.createStore({
   },
 
   listSuccess: function(articles) {
-    this.setState({articles: articles});
+    this.setState({articles: articles, hasNext: this.api.hasNext()});
   },
 
   listError: function(err) {
     this.setError(err, "list");
+  },
+
+  listNext: function() {
+    this.resetError();
+    return this.api.listNext();
+  },
+
+  listNextSuccess: function(articles) {
+    this.setState({articles: articles, hasNext: this.api.hasNext()});
+  },
+
+  listNextError: function(err) {
+    this.setError(err, "listNext");
   },
 
   import: function() {

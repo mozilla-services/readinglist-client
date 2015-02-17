@@ -12,6 +12,8 @@ var uglify = require('gulp-uglify');
 var webserver = require("gulp-webserver");
 var karma = require('karma').server;
 
+var DEFAULT_ENV = "production";
+
 var opt = {
   outputFolder: "build",
   server: {
@@ -21,7 +23,9 @@ var opt = {
     open: true
   },
   envifyVars: {
-    READINGLIST_SERVER_BASEURL: process.env.READINGLIST_SERVER_BASEURL
+    NODE_ENV:                   process.env.NODE_ENV || DEFAULT_ENV,
+    MAX_ITEMS_PER_PAGE:         process.env.MAX_ITEMS_PER_PAGE,
+    READINGLIST_SERVER_BASEURL: process.env.READINGLIST_SERVER_BASEURL,
   },
   cssAssets: [
     "node_modules/bootstrap/dist/css/bootstrap.css",

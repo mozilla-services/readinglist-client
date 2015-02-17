@@ -55,7 +55,7 @@ export default React.createClass({
 
   render: function() {
     return (
-      <Panel title={this.props.title} actionButtons={[<CloseButton />]}>
+      <Panel title={this.props.title} bodyWrap={false} actionButtons={[<CloseButton />]}>
         <iframe src={this.props.url} />
       </Panel>
     );

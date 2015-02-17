@@ -35,6 +35,19 @@ var ImportButton = React.createClass({
   }
 });
 
+var NextPageButton = React.createClass({
+  handleNextClick: function() {
+    ArticleActions.listNext();
+  },
+
+  render: function() {
+    return (
+      <Button type="info" size="sm" icon="chevron-right"
+              onClick={this.handleNextClick} label="Next" />
+    );
+  }
+});
+
 export default React.createClass({
   mixins: [ReactAddons.PureRenderMixin],
 
@@ -54,6 +67,10 @@ export default React.createClass({
             );
           })
         }</ul>
+        {!this.props.hasNext ? null :
+          <p className="list-pages text-right">
+            <NextPageButton />
+          </p>}
         {this.props.articles.length ? null :
           <p className="list-empty text-center">
             You don't have anything to read just yet.

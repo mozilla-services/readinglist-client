@@ -268,6 +268,7 @@ describe("ArticleStore", function() {
   describe("#list()", function() {
     it("should reset error state", function() {
       var store = createStore({
+        hasNext: returns(false),
         listArticles: returnPromise(fulfiller([art1, art2]))
       });
       sandbox.stub(store, "resetError");
@@ -279,6 +280,7 @@ describe("ArticleStore", function() {
 
     it("should refresh the list on success", function(done) {
       var store = createStore({
+        hasNext: returns(false),
         listArticles: returnPromise(fulfiller([art1, art2]))
       });
 
@@ -291,10 +293,51 @@ describe("ArticleStore", function() {
 
     it("should update state with an error on failure", function(done) {
       var store = createStore({
+        hasNext: returns(false),
         listArticles: returnPromise(rejecter("boo"))
       });
 
       ArticleActions.list({});
+
+      asyncAssert(done, function() {
+        expect(store.state.error).eql("boo");
+      });
+    });
+  });
+
+  describe("#listNext()", function() {
+    it("should reset error state", function() {
+      var store = createStore({
+        hasNext: returns(false),
+        listNext: returnPromise(fulfiller([art1, art2]))
+      });
+      sandbox.stub(store, "resetError");
+
+      ArticleActions.listNext();
+
+      sinon.assert.called(store.resetError);
+    });
+
+    it("should refresh the list on success", function(done) {
+      var store = createStore({
+        hasNext: returns(false),
+        listNext: returnPromise(fulfiller([art1, art2]))
+      });
+
+      ArticleActions.listNext();
+
+      asyncAssert(done, function() {
+        expect(store.state.articles).eql([art1, art2]);
+      });
+    });
+
+    it("should update state with an error on failure", function(done) {
+      var store = createStore({
+        hasNext: returns(false),
+        listNext: returnPromise(rejecter("boo"))
+      });
+
+      ArticleActions.listNext();
 
       asyncAssert(done, function() {
         expect(store.state.error).eql("boo");
