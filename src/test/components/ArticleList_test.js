@@ -104,5 +104,12 @@ describe("ArticleList tests", function() {
 
       expect($(view, ".list-group-item.active")).eql(null);
     });
+
+    it("should render the number of total records", function() {
+      var view = TestUtils.renderIntoDocument(
+        <ArticleList articles={fakeArticleList} totalRecords={12} />);
+
+      expect($(view, ".badge").textContent).eql("12");
+    });
   });
 });

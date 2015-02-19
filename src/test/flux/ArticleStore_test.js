@@ -89,6 +89,32 @@ describe("ArticleStore", function() {
     });
   });
 
+  describe("#updateArticleList()", function() {
+    var store;
+
+    beforeEach(function() {
+      store = createStore({
+        articles: [],
+        hasNext: returns(true),
+        totalRecords: 12
+      });
+
+      store.updateArticleList([art1, art2]);
+    });
+
+    it("should update article list state", function() {
+      expect(store.state.articles).eql([art1, art2]);
+    });
+
+    it("should update totalRecords state", function() {
+      expect(store.state.totalRecords).eql(12);
+    });
+
+    it("should update hasNext state", function() {
+      expect(store.state.hasNext).eql(true);
+    });
+  });
+
   describe("#edit()", function() {
     var store;
 

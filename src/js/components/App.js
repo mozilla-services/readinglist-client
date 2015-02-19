@@ -36,7 +36,8 @@ export default React.createClass({
             <Auth />
             <ArticleList articles={this.state.articles}
                          selectedId={this.state.current && this.state.current.id}
-                         hasNext={this.state.hasNext} />
+                         hasNext={this.state.hasNext}
+                         totalRecords={this.state.totalRecords} />
           </div>
           <div className="col-md-9">
             <ArticleForm show={this.state.edit} current={this.state.current} />

@@ -79,7 +79,16 @@ export var ArticleStore = DocBrown.createStore({
       error: null,
       errorType: null,
       hasNext: false,
+      totalRecords: 0,
     };
+  },
+
+  updateArticleList: function(articles) {
+    this.setState({
+      articles: articles,
+      hasNext: this.api.hasNext(),
+      totalRecords: this.api.totalRecords,
+    });
   },
 
   resetError: function() {
@@ -164,7 +173,7 @@ export var ArticleStore = DocBrown.createStore({
   },
 
   listSuccess: function(articles) {
-    this.setState({articles: articles, hasNext: this.api.hasNext()});
+    this.updateArticleList(articles);
   },
 
   listError: function(err) {
@@ -177,7 +186,7 @@ export var ArticleStore = DocBrown.createStore({
   },
 
   listNextSuccess: function(articles) {
-    this.setState({articles: articles, hasNext: this.api.hasNext()});
+    this.updateArticleList(articles);
   },
 
   listNextError: function(err) {

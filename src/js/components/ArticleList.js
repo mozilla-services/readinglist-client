@@ -48,6 +48,18 @@ var NextPageButton = React.createClass({
   }
 });
 
+var PanelTitle = React.createClass({
+  render: function() {
+    return (
+      <span>
+        Articles
+        {!this.props.totalRecords ? null :
+          <span className="badge">{this.props.totalRecords}</span>}
+      </span>
+    );
+  }
+});
+
 export default React.createClass({
   mixins: [ReactAddons.PureRenderMixin],
 
@@ -57,7 +69,8 @@ export default React.createClass({
       actionButtons.push(<ImportButton/>);
     }
     return (
-      <Panel title="Articles" bodyWrap={false} actionButtons={actionButtons}>
+      <Panel title={<PanelTitle totalRecords={this.props.totalRecords} />}
+             bodyWrap={false} actionButtons={actionButtons}>
         <ul className="list-group">{
           this.props.articles.map(article => {
             var classes = ReactAddons.classSet({

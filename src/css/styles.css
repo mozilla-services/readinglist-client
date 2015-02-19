@@ -19,3 +19,7 @@ iframe {
 .list-group-item.active h4 a {
   color: #fff;
 }
+
+.panel-title .badge {
+  margin-left: .5em;
+}

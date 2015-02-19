@@ -46,6 +46,15 @@ export default class API {
     this.window = options.window || window;
     this._authToken = null;
     this._nextPageUrl = null;
+    this._totalRecords = 0;
+  }
+
+  /**
+   * Estimated total number of records.
+   * @return {Number}
+   */
+  get totalRecords() {
+    return this._totalRecords;
   }
 
   /**
@@ -70,6 +79,9 @@ export default class API {
       // Pagination headers.
       if (headers["Next-Page"]) {
         this._nextPageUrl = headers["Next-Page"];
+      }
+      if (headers["Total-Records"]) {
+        this._totalRecords = parseInt(headers["Total-Records"], 10);
       }
       if (this.debug) {
         console.info("API response", res);

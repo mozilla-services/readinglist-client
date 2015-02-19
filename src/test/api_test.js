@@ -226,8 +226,18 @@ describe("API", function() {
       api.listArticles().then(function() {
         expect(api._nextPageUrl).eql("http://invalid.next/");
         done();
-      });
+      }).catch(done);
     });
+
+    it("should store the total nb of records out of the Total-Records header",
+      function(done) {
+        serverRespond({body: [], headers: {"Total-Records": "12"}});
+
+        api.listArticles().then(function() {
+          expect(api.totalRecords).eq(12);
+          done();
+        }).catch(done);
+      });
   });
 
   describe("#hasNext()", function() {

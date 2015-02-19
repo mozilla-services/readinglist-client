@@ -6,7 +6,7 @@
   "scripts": {
     "build": "gulp dist",
     "lint": "jsxhint -c .jshintrc src/js",
-    "dev": "gulp",
+    "dev": "NODE_ENV=development gulp",
     "tdd": "gulp tdd",
     "test": "npm run lint && gulp test"
   },
