@@ -35,6 +35,7 @@ export default React.createClass({
           <div className="col-md-3">
             <Auth />
             <ArticleList articles={this.state.articles}
+                         selectedId={this.state.current && this.state.current.id}
                          hasNext={this.state.hasNext} />
           </div>
           <div className="col-md-9">

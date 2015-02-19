@@ -16,7 +16,8 @@ export var AuthStore = DocBrown.createStore({
 
   initialize: function(api, options={debug: false}) {
     this.api = api;
-    if (options.debug) {
+    this.debug = !!options.debug;
+    if (this.debug) {
       this.subscribe(function(state) {
         console.info("AuthStore state changed", state);
       });
@@ -62,7 +63,8 @@ export var ArticleStore = DocBrown.createStore({
 
   initialize: function(api, options={debug: false}) {
     this.api = api;
-    if (options.debug) {
+    this.debug = !!options.debug;
+    if (this.debug) {
       this.subscribe(function(state) {
         console.info("ArticleStore state changed", state);
       });
@@ -192,8 +194,10 @@ export var ArticleStore = DocBrown.createStore({
 
   importSuccess: function(response) {
     // XXX We want proper notification messages displayed to the end user here
-    response.responses.forEach(function(response) {
-      console.log("imported", response.body.title, "HTTP", response.status);
+    response.responses.forEach(response => {
+      if (this.debug) {
+        console.log("imported", response.body.title, "HTTP", response.status);
+      }
     });
     ArticleActions.list();
   },

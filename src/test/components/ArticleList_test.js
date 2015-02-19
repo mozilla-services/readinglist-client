@@ -91,5 +91,18 @@ describe("ArticleList tests", function() {
 
       sinon.assert.calledOnce(ArticleActions.listNext);
     });
+
+    it("should hightlight selected article in the list", function() {
+      var view = TestUtils.renderIntoDocument(
+        <ArticleList articles={fakeArticleList} selectedId={fakeArticleList[1].id} />);
+
+      expect($(view, ".list-group-item.active h4 a").textContent).eql(fakeArticleList[1].title);
+    });
+
+    it("shouldn't highlight any entry when no article is selected", function() {
+      var view = TestUtils.renderIntoDocument(<ArticleList articles={fakeArticleList} />);
+
+      expect($(view, ".list-group-item.active")).eql(null);
+    });
   });
 });

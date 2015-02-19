@@ -59,9 +59,13 @@ export default React.createClass({
     return (
       <Panel title="Articles" bodyWrap={false} actionButtons={actionButtons}>
         <ul className="list-group">{
-          this.props.articles.map(function(article) {
+          this.props.articles.map(article => {
+            var classes = ReactAddons.classSet({
+              "list-group-item": true,
+              "active": article.id === this.props.selectedId
+            });
             return (
-              <li key={article.id} className="list-group-item">
+              <li key={article.id} className={classes}>
                 <ArticleEntry {...article} />
               </li>
             );
