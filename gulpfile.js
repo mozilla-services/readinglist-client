@@ -3,14 +3,14 @@
 "use strict";
 
 var gulp = require("gulp");
-var browserify = require('browserify');
-var envify = require('envify/custom');
-var watchify = require('watchify');
-var source = require('vinyl-source-stream');
-var to5ify = require('6to5ify');
-var uglify = require('gulp-uglify');
+var browserify = require("browserify");
+var envify = require("envify/custom");
+var watchify = require("watchify");
+var source = require("vinyl-source-stream");
+var to5ify = require("6to5ify");
+var uglify = require("gulp-uglify");
 var webserver = require("gulp-webserver");
-var karma = require('karma').server;
+var karma = require("karma").server;
 
 var DEFAULT_ENV = "production";
 
@@ -23,12 +23,13 @@ var opt = {
     open: true
   },
   envifyVars: {
-    NODE_ENV:                   process.env.NODE_ENV || DEFAULT_ENV,
-    MAX_ITEMS_PER_PAGE:         process.env.MAX_ITEMS_PER_PAGE,
-    READINGLIST_SERVER_BASEURL: process.env.READINGLIST_SERVER_BASEURL,
+    NODE_ENV: process.env.NODE_ENV || DEFAULT_ENV,
+    MAX_ITEMS_PER_PAGE: process.env.MAX_ITEMS_PER_PAGE,
+    READINGLIST_SERVER_BASEURL: process.env.READINGLIST_SERVER_BASEURL
   },
   cssAssets: [
     "node_modules/bootstrap/dist/css/bootstrap.css",
+    "node_modules/bootstrap/dist/css/bootstrap.css.map",
     "src/css/styles.css"
   ],
   fontAssets: [
@@ -157,7 +158,7 @@ gulp.task("watchify", function() {
       .pipe(gulp.dest(opt.outputFolder + "/js"));
   }
 
-  var watcher= watchify(b);
+  var watcher = watchify(b);
   watcher.on("update", function() {
     updateBundle(watcher);
   });
@@ -170,7 +171,7 @@ gulp.task("watchify", function() {
  * Launch a server with livereload
  */
 gulp.task("watch", ["assets", "js:vendors", "watchify"], function() {
-  gulp.watch(opt.cssAssets,  ["assets:css"]);
+  gulp.watch(opt.cssAssets, ["assets:css"]);
   gulp.watch(opt.dataAssets, ["assets:data"]);
   gulp.watch(opt.fontAssets, ["assets:fonts"]);
   gulp.watch(opt.htmlAssets, ["assets:html"]);
