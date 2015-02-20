@@ -25,6 +25,7 @@ var opt = {
   envifyVars: {
     NODE_ENV:                   process.env.NODE_ENV || DEFAULT_ENV,
     MAX_ITEMS_PER_PAGE:         process.env.MAX_ITEMS_PER_PAGE,
+    READABLE_PROXY_URL:         process.env.READABLE_PROXY_URL,
     READINGLIST_SERVER_BASEURL: process.env.READINGLIST_SERVER_BASEURL
   },
   cssAssets: [

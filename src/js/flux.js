@@ -61,8 +61,16 @@ export var ArticleActions = DocBrown.createActions(Dispatcher, [
 export var ArticleStore = DocBrown.createStore({
   actions: [ArticleActions],
 
-  initialize: function(api, options={debug: false}) {
+  /**
+   * Constructor.
+   * @param  {API}            api            The API client instance.
+   * @param  {ContentManager} contentManager The content manager instance.
+   * @param  {Object}         options        The options object.
+   * @return {ArticleStore}
+   */
+  initialize: function(api, contentManager, options={debug: false}) {
     this.api = api;
+    this.contentManager = contentManager;
     this.debug = !!options.debug;
     if (this.debug) {
       this.subscribe(function(state) {
@@ -75,6 +83,7 @@ export var ArticleStore = DocBrown.createStore({
     return {
       articles: [],
       current: null,
+      currentContents: null,
       edit: false,
       error: null,
       errorType: null,
@@ -159,7 +168,10 @@ export var ArticleStore = DocBrown.createStore({
 
   deleteSuccess: function(article) {
     var current = this.state.current || {};
-    if (current.id === article.id) this.setState({current: null, edit: false});
+    if (current.id === article.id) {
+      this.setState({current: null, edit: false});
+    }
+    this.contentManager.drop(article);
     ArticleActions.list();
   },
 
@@ -216,11 +228,21 @@ export var ArticleStore = DocBrown.createStore({
   },
 
   open: function(article) {
+    this.resetError();
     this.setState({edit: false, current: article});
+    return this.contentManager.load(article);
+  },
+
+  openSuccess: function(articleContents) {
+    this.setState({currentContents: articleContents});
+  },
+
+  openError: function(err) {
+    this.setError(err, "open");
   },
 
   close: function() {
-    this.setState({current: null});
+    this.setState({current: null, currentContents: null});
   },
 
   markAsRead: function(article) {
