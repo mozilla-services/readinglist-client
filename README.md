@@ -25,7 +25,7 @@ You can configure the client using the following environment variables:
 
 Environment variables will be used during the build step to replace matching placeholders in resulting js assets. Eg. that means if you want to override the default API base url running the local development server, you can run:
 
-    $ READINGLIST_SERVER_BASEURL=http://my.alt.domain.tld npm run dev
+    $ READINGLIST_SERVER_BASEURL=http://my.alt.domain.tld npm start
 
 Building & deploying
 --------------------
@@ -37,12 +37,13 @@ Result is then available in the `build/` subfolder. This is what should be deplo
 Local dev server
 ----------------
 
-    $ npm run dev
+    $ npm start
 
 ### Notes:
 
-- This local development server will watch for local asset changes and live-reload the page automatically.
-- The address used is http://localhost:4000
+- This local development server will watch for local asset changes and live-reload the page automatically;
+- It will set `NODE_ENV`to `development`;
+- The address used is `http://localhost:4000`.
 
 Linting
 -------
