@@ -3,7 +3,7 @@
 import { expect } from "chai";
 import sinon from "sinon";
 
-import { asyncAssert, returns, returnPromise, fulfiller, rejecter } from "../utils";
+import { asyncAssert, returns } from "../utils";
 
 import { Dispatcher, ArticleStore, ArticleActions } from "../../js/flux";
 
@@ -13,8 +13,8 @@ describe("ArticleStore", function() {
   var art1 = {id: 1, url: "http://fake1", title: "Fake1", added_by: "User1"};
   var art2 = {id: 2, url: "http://fake2", title: "Fake2", added_by: "User2"};
 
-  function createStore(api) {
-    return new ArticleStore(api);
+  function createStore(api, contentManager) {
+    return new ArticleStore(api, contentManager);
   }
 
   beforeEach(function() {
@@ -57,7 +57,7 @@ describe("ArticleStore", function() {
   describe("#create()", function() {
     it("should reset error state", function() {
       var store = createStore({
-        createArticle: returnPromise(fulfiller(art1))
+        createArticle: returns(Promise.resolve(art1))
       });
       sandbox.stub(store, "resetError");
 
@@ -68,7 +68,7 @@ describe("ArticleStore", function() {
 
     it("should refresh the list on success", function(done) {
       sandbox.stub(ArticleActions, "list");
-      createStore({createArticle: returnPromise(fulfiller(art1))});
+      createStore({createArticle: returns(Promise.resolve(art1))});
 
       ArticleActions.create(art1);
 
@@ -79,7 +79,7 @@ describe("ArticleStore", function() {
 
     it("should update state with an error on failure", function(done) {
       sandbox.stub(ArticleActions, "list");
-      var store = createStore({createArticle: returnPromise(rejecter("boo"))});
+      var store = createStore({createArticle: returns(Promise.reject("boo"))});
 
       ArticleActions.create(art1);
 
@@ -148,7 +148,7 @@ describe("ArticleStore", function() {
   describe("#update()", function() {
     it("should reset error state", function() {
       var store = createStore({
-        updateArticle: returnPromise(fulfiller(art1))
+        updateArticle: returns(Promise.resolve(art1))
       });
       sandbox.stub(store, "resetError");
 
@@ -159,7 +159,7 @@ describe("ArticleStore", function() {
 
     it("should refresh the list on success", function(done) {
       sandbox.stub(ArticleActions, "list");
-      createStore({updateArticle: returnPromise(fulfiller(art1))});
+      createStore({updateArticle: returns(Promise.resolve(art1))});
 
       ArticleActions.update(art1);
 
@@ -170,7 +170,7 @@ describe("ArticleStore", function() {
 
     it("should disable edit mode on success", function(done) {
       sandbox.stub(ArticleActions, "list");
-      var store = createStore({updateArticle: returnPromise(fulfiller(art1))});
+      var store = createStore({updateArticle: returns(Promise.resolve(art1))});
       store.setState({edit: true, current: art1});
 
       ArticleActions.update(art1);
@@ -183,7 +183,7 @@ describe("ArticleStore", function() {
     it("should update state with an error on failure", function(done) {
       sandbox.stub(ArticleActions, "list");
       var store = createStore({
-        updateArticle: returnPromise(rejecter("boo"))
+        updateArticle: returns(Promise.reject("boo"))
       });
 
       ArticleActions.update(art1);
@@ -197,7 +197,7 @@ describe("ArticleStore", function() {
   describe("#delete()", function() {
     it("should reset error state", function() {
       var store = createStore({
-        deleteArticle: returnPromise(fulfiller(art1))
+        deleteArticle: returns(Promise.resolve(art1))
       });
       sandbox.stub(store, "resetError");
 
@@ -208,7 +208,8 @@ describe("ArticleStore", function() {
 
     it("should refresh the list on success", function(done) {
       sandbox.stub(ArticleActions, "list");
-      createStore({deleteArticle: returnPromise(fulfiller(art1))});
+      createStore({deleteArticle: returns(Promise.resolve(art1))},
+                  {drop: sinon.spy()});
 
       ArticleActions.delete(art1);
 
@@ -219,7 +220,8 @@ describe("ArticleStore", function() {
 
     it("should disable edit mode on success", function(done) {
       sandbox.stub(ArticleActions, "list");
-      var store = createStore({deleteArticle: returnPromise(fulfiller(art1))});
+      var store = createStore({deleteArticle: returns(Promise.resolve(art1))},
+                              {drop: sinon.spy()});
       store.setState({edit: true, current: art1});
 
       ArticleActions.delete(art1);
@@ -231,9 +233,8 @@ describe("ArticleStore", function() {
 
     it("should update state with an error on failure", function(done) {
       sandbox.stub(ArticleActions, "list");
-      var store = createStore({
-        deleteArticle: returnPromise(rejecter("boo"))
-      });
+      var store = createStore({deleteArticle: returns(Promise.reject("boo"))},
+                              {drop: sinon.spy()});
 
       ArticleActions.delete(art1);
 
@@ -243,7 +244,8 @@ describe("ArticleStore", function() {
     });
 
     it("should update state current article if just deleted", function(done) {
-      var store = createStore({deleteArticle: returnPromise(fulfiller(art1))});
+      var store = createStore({deleteArticle: returns(Promise.resolve(art1))},
+                              {drop: sinon.spy()});
       store.setState({current: art1});
 
       ArticleActions.delete(art1);
@@ -252,12 +254,26 @@ describe("ArticleStore", function() {
         expect(store.state.current).to.be.a("null");
       });
     });
+
+    it("should drop article contents from content manager", function(done) {
+      var drop = sinon.spy();
+      var store = createStore({deleteArticle: returns(Promise.resolve(art1))},
+                              {drop: drop});
+      store.setState({current: art1});
+
+      ArticleActions.delete(art1);
+
+      asyncAssert(done, function() {
+        sinon.assert.calledOnce(drop);
+        sinon.assert.calledWithExactly(drop, art1);
+      });
+    });
   });
 
   describe("#get()", function() {
     it("should reset error state", function() {
       var store = createStore({
-        getArticle: returnPromise(fulfiller(art1))
+        getArticle: returns(Promise.resolve(art1))
       });
       sandbox.stub(store, "resetError");
 
@@ -268,7 +284,7 @@ describe("ArticleStore", function() {
 
     it("should refresh the list on success", function(done) {
       var store = createStore({
-        getArticle: returnPromise(fulfiller(art1))
+        getArticle: returns(Promise.resolve(art1))
       });
 
       ArticleActions.get({id: 42});
@@ -280,7 +296,7 @@ describe("ArticleStore", function() {
 
     it("should update state with an error on failure", function(done) {
       var store = createStore({
-        getArticle: returnPromise(rejecter("boo"))
+        getArticle: returns(Promise.reject("boo"))
       });
 
       ArticleActions.get({id: 42});
@@ -295,7 +311,7 @@ describe("ArticleStore", function() {
     it("should reset error state", function() {
       var store = createStore({
         hasNext: returns(false),
-        listArticles: returnPromise(fulfiller([art1, art2]))
+        listArticles: returns(Promise.resolve([art1, art2]))
       });
       sandbox.stub(store, "resetError");
 
@@ -307,7 +323,7 @@ describe("ArticleStore", function() {
     it("should refresh the list on success", function(done) {
       var store = createStore({
         hasNext: returns(false),
-        listArticles: returnPromise(fulfiller([art1, art2]))
+        listArticles: returns(Promise.resolve([art1, art2]))
       });
 
       ArticleActions.list({});
@@ -320,7 +336,7 @@ describe("ArticleStore", function() {
     it("should update state with an error on failure", function(done) {
       var store = createStore({
         hasNext: returns(false),
-        listArticles: returnPromise(rejecter("boo"))
+        listArticles: returns(Promise.reject("boo"))
       });
 
       ArticleActions.list({});
@@ -335,7 +351,7 @@ describe("ArticleStore", function() {
     it("should reset error state", function() {
       var store = createStore({
         hasNext: returns(false),
-        listNext: returnPromise(fulfiller([art1, art2]))
+        listNext: returns(Promise.resolve([art1, art2]))
       });
       sandbox.stub(store, "resetError");
 
@@ -347,7 +363,7 @@ describe("ArticleStore", function() {
     it("should refresh the list on success", function(done) {
       var store = createStore({
         hasNext: returns(false),
-        listNext: returnPromise(fulfiller([art1, art2]))
+        listNext: returns(Promise.resolve([art1, art2]))
       });
 
       ArticleActions.listNext();
@@ -360,7 +376,7 @@ describe("ArticleStore", function() {
     it("should update state with an error on failure", function(done) {
       var store = createStore({
         hasNext: returns(false),
-        listNext: returnPromise(rejecter("boo"))
+        listNext: returns(Promise.reject("boo"))
       });
 
       ArticleActions.listNext();
@@ -412,6 +428,54 @@ describe("ArticleStore", function() {
       store.importError({message: "boo"});
 
       expect(store.state.error).eql({message: "boo"});
+    });
+  });
+
+  describe("#open()", function() {
+    var store, load;
+
+    beforeEach(function() {
+      load = sandbox.spy();
+      store = createStore({}, {load: load});
+    });
+
+    it("should set current article state", function() {
+      store.open(art1);
+
+      expect(store.state.current).eql(art1);
+    });
+
+    it("should switch off edit mode", function() {
+      store.open(art1);
+
+      expect(store.state.edit).eql(false);
+    });
+
+    it("should load article contents", function() {
+      store.open(art1);
+
+      sinon.assert.calledOnce(load);
+      sinon.assert.calledWithExactly(load, art1);
+    });
+  });
+
+  describe("#openSuccess", function() {
+    it("should update currentContents state", function() {
+      var store = createStore({}, {});
+
+      store.openSuccess("foo");
+
+      expect(store.state.currentContents).eql("foo");
+    });
+  });
+
+  describe("#openError", function() {
+    it("should set error", function() {
+      var store = createStore({}, {});
+
+      store.openError("boo");
+
+      expect(store.state.error).eql("boo");
     });
   });
 });

@@ -41,7 +41,10 @@ export default React.createClass({
           </div>
           <div className="col-md-9">
             <ArticleForm show={this.state.edit} current={this.state.current} />
-            {this.state.current ? <Viewer {...this.state.current} /> : null}
+            {!this.state.current ? null :
+              <Viewer title={this.state.current.title}
+                      url={this.state.current.url}
+                      contents={this.state.currentContents} />}
           </div>
         </div>
       </div>

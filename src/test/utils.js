@@ -32,8 +32,8 @@ export function jdump(o) {
 }
 
 /**
- * This is mostly revamping Sinon's fake server.respondWith function, mostly to
- * make it easier to use & compose.
+ * This is mostly revamping Sinon's fake server.respondWith function for making
+ * it easier to use & compose.
  *
  * @param  {Object} server   The sinon fake server object.
  * @param  {String} endpoint Endpoint, eg. "GET /articles"
@@ -50,28 +50,12 @@ export function respondWith(server, endpoint, response={}) {
   ]);
 }
 
-export function asyncAssert(done, fn) {
-  setImmediate(() => { fn(); done(); });
-}
-
-export function fulfiller(...rest) {
-  return function(fulfill) {
-    fulfill(...rest);
-  };
-}
-
-export function rejecter(...rest) {
-  return function(_, reject) {
-    reject(...rest);
-  };
+export function asyncAssert(done, assertFn) {
+  setImmediate(() => { assertFn(); done(); });
 }
 
 export function returns(what) {
   return function() {
     return what;
   };
-}
-
-export function returnPromise(handler) {
-  return returns(new Promise(handler));
 }
