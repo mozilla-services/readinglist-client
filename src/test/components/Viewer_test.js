@@ -5,29 +5,28 @@ import { expect } from "chai";
 import { $ } from "../utils";
 
 import Viewer from "../../js/components/Viewer";
-import { DEFAULT_IFRAME_SRC_URL } from "../../js/components/Viewer";
 
 var TestUtils = React.addons.TestUtils;
 
 describe("Viewer tests", function() {
-  it("should load the iframe with default src url", function() {
+  it("should render fetching message by default", function() {
     var view = TestUtils.renderIntoDocument(<Viewer />);
 
-    expect($(view, "iframe").src).eql(DEFAULT_IFRAME_SRC_URL);
+    expect(view.getDOMNode().textContent).match(/Loading/);
   });
 
-  it("should load the iframe with article url when provided", function() {
-    var view = TestUtils.renderIntoDocument(<Viewer url="http://invalid/" />);
+  it("should render provided contents", function() {
+    var view = TestUtils.renderIntoDocument(<Viewer contents="<em>hello</em>" />);
 
-    expect($(view, "iframe").src).eql("http://invalid/");
+    expect($(view, "em").textContent).eql("hello");
   });
 
   it("should update iframe src when url prop changes", function() {
-    var view = TestUtils.renderIntoDocument(<Viewer url="http://invalid1/" />);
+    var view = TestUtils.renderIntoDocument(<Viewer contents="<em>hello</em>" />);
 
-    view.setProps({url: "http://invalid2/"});
+    view.setProps({contents: "<em>yo</em>"});
 
-    expect($(view, "iframe").src).eql("http://invalid2/");
+    expect($(view, "em").textContent).eql("yo");
   });
 
   it("should render a close button", function() {

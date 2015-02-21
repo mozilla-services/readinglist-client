@@ -8,8 +8,6 @@ import { ArticleActions } from "../flux";
 import Button from "./Button";
 import Panel from "./Panel";
 
-export const DEFAULT_IFRAME_SRC_URL = "about:blank";
-
 var CloseButton = React.createClass({
   handleClick: function() {
     ArticleActions.close();
@@ -25,24 +23,24 @@ var CloseButton = React.createClass({
 
 /**
  * Article viewer component.
- *
- * XXX For now this only tries to load the article url in a local iframe.
- * In a near future, we'll rather display the readable article HTML contents
- * fetched from the service.
  */
 export default React.createClass({
   mixins: [ReactAddons.PureRenderMixin],
 
-  getDefaultProps: function() {
-    return {url: DEFAULT_IFRAME_SRC_URL};
+  getInitialState: function() {
+    return {title: null, url: null, contents: null};
   },
 
-  getInitialState: function() {
-    return {url: this.props.url};
+  getDefaultProps: function() {
+    return {contents: "Loading…"};
   },
 
   _loadFromProps: function(props) {
-    this.setState({url: props && props.url || DEFAULT_IFRAME_SRC_URL});
+    this.setState({
+      title: props.title,
+      url: props.url,
+      contents: props.contents
+    });
   },
 
   componentDidMount: function() {
@@ -55,8 +53,9 @@ export default React.createClass({
 
   render: function() {
     return (
-      <Panel title={this.props.title} bodyWrap={false} actionButtons={[<CloseButton />]}>
-        <iframe src={this.props.url} />
+      <Panel title={this.props.title} actionButtons={[<CloseButton />]}>
+        {!this.state.contents ? null :
+          <div dangerouslySetInnerHTML={{__html: this.state.contents}} />}
       </Panel>
     );
   }
