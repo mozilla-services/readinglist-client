@@ -36,7 +36,10 @@ export default class ContentManager {
   fetch(article) {
     return this.client({
       path: this.proxyServerUrl,
-      params: {url: article.url}
+      params: {
+        url: article.url,
+        sanitize: "yes"
+      }
     }).then(res => {
       var contents = res && res.entity && res.entity.content;
       this.save(article, contents);

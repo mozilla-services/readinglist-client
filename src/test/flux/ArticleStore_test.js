@@ -451,6 +451,14 @@ describe("ArticleStore", function() {
       expect(store.state.edit).eql(false);
     });
 
+    it("should reset current contents", function() {
+      store.setState({currentContents: "foo"});
+
+      store.open(art1);
+
+      expect(store.state.currentContents).eql(null);
+    });
+
     it("should load article contents", function() {
       store.open(art1);
 

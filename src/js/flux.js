@@ -229,7 +229,7 @@ export var ArticleStore = DocBrown.createStore({
 
   open: function(article) {
     this.resetError();
-    this.setState({edit: false, current: article});
+    this.setState({edit: false, current: article, currentContents: null});
     return this.contentManager.load(article);
   },
 

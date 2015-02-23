@@ -43,6 +43,14 @@ describe("ContentManager", function() {
       sinon.assert.calledWithMatch(manager.client, {params: {url: article.url}});
     });
 
+    it("should fetch sanitized contents from the API", function() {
+      manager.client = sinon.stub().returns(new Promise(function(f) {f();}));
+
+      manager.fetch(article);
+
+      sinon.assert.calledWithMatch(manager.client, {params: {sanitize: "yes"}});
+    });
+
     it("should fetch an article contents", function() {
       manager.client = returns(Promise.resolve({entity: {content: "bar"}}));
 
