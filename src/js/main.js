@@ -8,7 +8,7 @@ import App from "./components/App";
 
 // XXX handle this with envify
 var serverUrl = process.env.READINGLIST_SERVER_BASEURL || "http://0.0.0.0:8000/v0";
-var proxyServerUrl = process.env.READABLE_PROXY_URL    || "http://0.0.0.0:3000/get";
+var proxyServerUrl = process.env.READABLE_PROXY_URL    || "http://0.0.0.0:3000/api/get";
 var debug = process.env.NODE_ENV === "development";
 
 var api = new API(serverUrl, {debug: debug});
