@@ -5,6 +5,7 @@ import sinon from "sinon";
 
 import { asyncAssert, returns } from "../utils";
 
+import { ArticleConstants } from "../../js/api";
 import { Dispatcher, ArticleStore, ArticleActions } from "../../js/flux";
 
 describe("ArticleStore", function() {
@@ -13,8 +14,8 @@ describe("ArticleStore", function() {
   var art1 = {id: 1, url: "http://fake1", title: "Fake1", added_by: "User1"};
   var art2 = {id: 2, url: "http://fake2", title: "Fake2", added_by: "User2"};
 
-  function createStore(api, contentManager) {
-    return new ArticleStore(api, contentManager);
+  function createStore(api, contentManager, options) {
+    return new ArticleStore(api, contentManager, options);
   }
 
   beforeEach(function() {
@@ -103,6 +104,18 @@ describe("ArticleStore", function() {
     });
 
     it("should update article list state", function() {
+      expect(store.state.articles).eql([art1, art2]);
+    });
+
+    it("should filter out deleted articles", function() {
+      store.updateArticleList([art1, art2, {
+        id: 3,
+        url: "http://fake3",
+        title: "Fake3",
+        added_by: "User3",
+        status: ArticleConstants.status.DELETED
+      }]);
+
       expect(store.state.articles).eql([art1, art2]);
     });
 
@@ -467,7 +480,7 @@ describe("ArticleStore", function() {
     });
   });
 
-  describe("#openSuccess", function() {
+  describe("#openSuccess()", function() {
     it("should update currentContents state", function() {
       var store = createStore({}, {});
 
@@ -477,11 +490,102 @@ describe("ArticleStore", function() {
     });
   });
 
-  describe("#openError", function() {
+  describe("#openError()", function() {
     it("should set error", function() {
       var store = createStore({}, {});
 
       store.openError("boo");
+
+      expect(store.state.error).eql("boo");
+    });
+  });
+
+  describe("#markAsRead()", function() {
+    it("should return a promise", function() {
+      var store = createStore({
+        updateArticle: returns(Promise.resolve(art1))
+      }, {});
+
+      return store.markAsRead(art1).should.become(art1);
+    });
+
+    it("should update article with operation info", function() {
+      var spy = sandbox.spy();
+      var store = createStore({updateArticle: spy}, {}, {
+        clientIdentifier: "fake-client-identifier"
+      });
+
+      store.markAsRead(art1);
+
+      sinon.assert.calledOnce(store.api.updateArticle);
+      sinon.assert.calledWithMatch(store.api.updateArticle, {
+        id: art1.id,
+        marked_read_by: "fake-client-identifier",
+        unread: false
+      });
+    });
+  });
+
+  describe("#markAsReadSuccess()", function() {
+    it("should refresh article list", function() {
+      sandbox.stub(ArticleActions, "list");
+      var store = createStore({}, {});
+
+      store.markAsReadSuccess();
+
+      sinon.assert.calledOnce(ArticleActions.list);
+    });
+  });
+
+  describe("#markAsReadError()", function() {
+    it("should set error", function() {
+      var store = createStore({}, {});
+
+      store.markAsReadError("boo");
+
+      expect(store.state.error).eql("boo");
+    });
+  });
+
+  describe("#archive()", function() {
+    it("should return a promise", function() {
+      var store = createStore({
+        updateArticle: returns(Promise.resolve(art1))
+      }, {});
+
+      return store.archive(art1).should.become(art1);
+    });
+
+    it("should update article with operation info", function() {
+      var spy = sandbox.spy();
+      var store = createStore({updateArticle: spy}, {});
+
+      store.archive(art1);
+
+      sinon.assert.calledOnce(store.api.updateArticle);
+      sinon.assert.calledWithMatch(store.api.updateArticle, {
+        id: art1.id,
+        status: ArticleConstants.status.ARCHIVED
+      });
+    });
+  });
+
+  describe("#archiveSuccess()", function() {
+    it("should refresh article list", function() {
+      sandbox.stub(ArticleActions, "list");
+      var store = createStore({}, {});
+
+      store.archiveSuccess();
+
+      sinon.assert.calledOnce(ArticleActions.list);
+    });
+  });
+
+  describe("#archiveError()", function() {
+    it("should set error", function() {
+      var store = createStore({}, {});
+
+      store.archiveError("boo");
 
       expect(store.state.error).eql("boo");
     });

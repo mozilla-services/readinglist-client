@@ -12,6 +12,14 @@ import interceptor from "rest/interceptor";
 
 export const AUTH_TOKEN_KEYNAME = "readinglist:auth:token";
 export const MAX_ITEMS_PER_PAGE = process.env.MAX_ITEMS_PER_PAGE || 10;
+export const ArticleConstants = Object.freeze({
+  status: {
+    DEFAULT:  0,
+    ARCHIVED: 1,
+    DELETED:  2,
+  }
+});
+
 /**
  * FxA auth custom interceptor.
  * @link https://github.com/cujojs/rest/blob/master/docs/interceptors.md#custom-interceptors
@@ -191,12 +199,10 @@ export default class API {
    */
   listArticles(filters={}) {
     this._nextPageUrl = null;
-    // TODO process filters
-    var q = {
-      unread: true,
+    var q = Object.assign({
       _sort:  "-last_modified",
       _limit: MAX_ITEMS_PER_PAGE
-    };
+    }, filters);
     return this._wrap(this.client({
       path: "/articles",
       params: q

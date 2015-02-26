@@ -4,6 +4,7 @@ import React from "react/addons";
 import { addons as ReactAddons } from "react/addons";
 
 import { ArticleActions } from "../flux";
+import { ArticleConstants } from "../api";
 
 import ArticleEntry from "./ArticleEntry";
 import Button from "./Button";
@@ -60,8 +61,63 @@ var PanelTitle = React.createClass({
   }
 });
 
+var FilterToggler = React.createClass({
+  render: function() {
+    return (
+      <div className="btn-group" role="group">{
+        this.props.choices.map((choice, i) => {
+          return <Button key={i} label={choice.label} size="sm"
+                         type={this.props.valueCheck === choice.value ? "info" : "default"}
+                         onClick={this.props.changeHandler(choice.value)} />;
+        })
+      }</div>
+    );
+  }
+});
+
+var Filters = React.createClass({
+  statics: {
+    unreadChoices: [
+      {label: "Read",   value: false},
+      {label: "Unread", value: true}
+    ],
+    statusChoices: [
+      {label: "Default",  value: ArticleConstants.status.DEFAULT},
+      {label: "Archived", value: ArticleConstants.status.ARCHIVED},
+      {label: "Deleted",  value: ArticleConstants.status.DELETED},
+    ]
+  },
+
+  filterClickHandler: function(name) {
+    return function(value) {
+      return () => ArticleActions.list({[name]: value});
+    };
+  },
+
+  render: function() {
+    return (
+      <div className="list-filters">
+        <div className="col-xs-6 text-left">
+          <FilterToggler choices={Filters.unreadChoices}
+                         valueCheck={this.props.filters.unread}
+                         changeHandler={this.filterClickHandler("unread")} />
+        </div>
+        <div className="col-xs-6 text-right">
+          <FilterToggler choices={Filters.statusChoices}
+                         valueCheck={this.props.filters.status}
+                         changeHandler={this.filterClickHandler("status")} />
+        </div>
+      </div>
+    );
+  }
+});
+
 export default React.createClass({
   mixins: [ReactAddons.PureRenderMixin],
+
+  getDefaultProps: function() {
+    return {filters: {}};
+  },
 
   render: function() {
     var actionButtons = [<AddButton/>];
@@ -71,6 +127,9 @@ export default React.createClass({
     return (
       <Panel title={<PanelTitle totalRecords={this.props.totalRecords} />}
              bodyWrap={false} actionButtons={actionButtons}>
+        <div className="panel-body">
+          <Filters filters={this.props.filters} />
+        </div>
         <ul className="list-group">{
           this.props.articles.map(article => {
             var classes = ReactAddons.classSet({
@@ -89,9 +148,7 @@ export default React.createClass({
             <NextPageButton />
           </p>}
         {this.props.articles.length ? null :
-          <p className="list-empty text-center">
-            You don't have anything to read just yet.
-          </p>}
+          <p className="list-empty text-center">The list is empty.</p>}
       </Panel>
     );
   }

@@ -9,14 +9,19 @@ import Button from "./Button";
 import Panel from "./Panel";
 
 var CloseButton = React.createClass({
-  handleClick: function() {
-    ArticleActions.close();
-  },
-
   render: function() {
     return (
       <Button type="default" size="xs" icon="remove" title="Close"
-              className="btn-close" onClick={this.handleClick} />
+              className="btn-close" onClick={this.props.onClick} />
+    );
+  }
+});
+
+var MarkAsReadButton = React.createClass({
+  render: function() {
+    return (
+      <Button className="btn-mark-as-read" type="default" title="Mark as read"
+              size="xs" icon="ok" onClick={this.props.onClick} />
     );
   }
 });
@@ -33,6 +38,14 @@ export default React.createClass({
 
   getDefaultProps: function() {
     return {contents: "Loading…"};
+  },
+
+  handleCloseClick: function() {
+    ArticleActions.close();
+  },
+
+  handleMarkAsReadClick: function() {
+    ArticleActions.markAsRead({id: this.props.id});
   },
 
   _loadFromProps: function(props) {
@@ -53,7 +66,10 @@ export default React.createClass({
 
   render: function() {
     return (
-      <Panel title={this.props.title} actionButtons={[<CloseButton />]}>
+      <Panel title={this.props.title} actionButtons={[
+        <MarkAsReadButton onClick={this.handleMarkAsReadClick} />,
+        <CloseButton onClick={this.handleCloseClick} />
+      ]}>
         {!this.state.contents ? null :
           <div dangerouslySetInnerHTML={{__html: this.state.contents}} />}
       </Panel>

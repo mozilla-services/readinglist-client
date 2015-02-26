@@ -35,6 +35,7 @@ export default React.createClass({
           <div className="col-md-3">
             <Auth />
             <ArticleList articles={this.state.articles}
+                         filters={this.state.filters}
                          selectedId={this.state.current && this.state.current.id}
                          hasNext={this.state.hasNext}
                          totalRecords={this.state.totalRecords} />
@@ -42,9 +43,8 @@ export default React.createClass({
           <div className="col-md-9">
             <ArticleForm show={this.state.edit} current={this.state.current} />
             {this.state.current ?
-              <Viewer title={this.state.current.title}
-                      url={this.state.current.url}
-                      contents={this.state.currentContents} /> : null}
+              <Viewer contents={this.state.currentContents}
+                      {...this.state.current} /> : null}
           </div>
         </div>
       </div>

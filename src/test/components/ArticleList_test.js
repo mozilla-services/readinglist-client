@@ -4,9 +4,10 @@ import React from "react/addons";
 import sinon from "sinon";
 import { expect } from "chai";
 import { ArticleActions } from "../../js/flux";
-import { $, $$ } from "../utils";
+import { $, $$, findELByContent } from "../utils";
 import fakeArticleList from "../fixtures/articles.json";
 
+import { ArticleConstants } from "../../js/api";
 import ArticleList from "../../js/components/ArticleList";
 
 var TestUtils = React.addons.TestUtils;
@@ -110,6 +111,80 @@ describe("ArticleList tests", function() {
         <ArticleList articles={fakeArticleList} totalRecords={12} />);
 
       expect($(view, ".badge").textContent).eql("12");
+    });
+
+    describe("Filters", function() {
+      var view, findFilterButton;
+
+      beforeEach(function() {
+        sandbox.stub(ArticleActions, "list");
+        view = TestUtils.renderIntoDocument(<ArticleList
+          articles={[]}
+          filters={{
+            unread: false,
+            status: ArticleConstants.status.ARCHIVED
+          }}
+        />);
+        findFilterButton = findELByContent.bind(null, view, ".list-filters button");
+      });
+
+      describe("unread filter", function() {
+        it("should reflect unread filter state", function() {
+          // Note: The `btn-info` class highlights the filter button.
+          expect(findFilterButton("Read").classList.contains("btn-info")).eql(true);
+          expect(findFilterButton("Unread").classList.contains("btn-info")).eql(false);
+        });
+
+        it("should list read articles", function() {
+          TestUtils.Simulate.click(findFilterButton("Read"));
+
+          sinon.assert.calledOnce(ArticleActions.list);
+          sinon.assert.calledWithExactly(ArticleActions.list, {unread: false});
+        });
+
+        it("should list unread articles", function() {
+          TestUtils.Simulate.click(findFilterButton("Unread"));
+
+          sinon.assert.calledOnce(ArticleActions.list);
+          sinon.assert.calledWithExactly(ArticleActions.list, {unread: true});
+        });
+      });
+
+      describe("status filter", function() {
+        it("should reflect status filter state", function() {
+          // Note: The `btn-info` class highlights the filter button.
+          expect(findFilterButton("Default").classList.contains("btn-info")).eql(false);
+          expect(findFilterButton("Archived").classList.contains("btn-info")).eql(true);
+          expect(findFilterButton("Deleted").classList.contains("btn-info")).eql(false);
+        });
+
+        it("should list default articles", function() {
+          TestUtils.Simulate.click(findFilterButton("Default"));
+
+          sinon.assert.calledOnce(ArticleActions.list);
+          sinon.assert.calledWithExactly(ArticleActions.list, {
+            status: ArticleConstants.status.DEFAULT
+          });
+        });
+
+        it("should list archived articles", function() {
+          TestUtils.Simulate.click(findFilterButton("Archived"));
+
+          sinon.assert.calledOnce(ArticleActions.list);
+          sinon.assert.calledWithExactly(ArticleActions.list, {
+            status: ArticleConstants.status.ARCHIVED
+          });
+        });
+
+        it("should list deleted articles", function() {
+          TestUtils.Simulate.click(findFilterButton("Deleted"));
+
+          sinon.assert.calledOnce(ArticleActions.list);
+          sinon.assert.calledWithExactly(ArticleActions.list, {
+            status: ArticleConstants.status.DELETED
+          });
+        });
+      });
     });
   });
 });

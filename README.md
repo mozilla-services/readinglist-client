@@ -19,6 +19,7 @@ Configuration
 
 You can configure the client using the following environment variables:
 
+- `CLIENT_DEVICE_IDENTIFIER`: The client identifier name; used when updating article read status (default: `readinglist-client`).
 - `MAX_ITEMS_PER_PAGE`: The maximum number of articles per result page; default: `10`.
 - `NODE_ENV`: The nodejs environment name; default: `production`.
 - `READINGLIST_SERVER_BASEURL`: the Readinglist server base URL; default: `http://0.0.0.0:8000/v0`.

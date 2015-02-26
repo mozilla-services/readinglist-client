@@ -47,39 +47,61 @@ describe("ArticleEntry tests", function() {
     });
 
     it("should render edit button", function() {
-      expect($(view, "button.btn-info").href).not.eql(null);
+      expect($(view, "button.btn-edit").href).not.eql(null);
     });
 
     it("should render delete button", function() {
-      expect($(view, "button.btn-danger").href).not.eql(null);
+      expect($(view, "button.btn-delete").href).not.eql(null);
     });
 
-    it("should call the open action when clicking the title", function() {
-      sandbox.stub(ArticleActions, "open");
+    describe("Action buttons", function() {
+      it("should call the open action when clicking the title", function() {
+        sandbox.stub(ArticleActions, "open");
 
-      TestUtils.Simulate.click($(view, "h4 a"));
+        TestUtils.Simulate.click($(view, "h4 a"));
 
-      sinon.assert.calledOnce(ArticleActions.open);
-      sinon.assert.calledWithExactly(ArticleActions.open, fakeArticle);
-    });
+        sinon.assert.calledOnce(ArticleActions.open);
+        sinon.assert.calledWithExactly(ArticleActions.open, fakeArticle);
+      });
 
-    it("should call the edit action on click on the edit button", function() {
-      sandbox.stub(ArticleActions, "edit");
+      it("should call the edit action on click on the edit button", function() {
+        sandbox.stub(ArticleActions, "edit");
 
-      TestUtils.Simulate.click($(view, "button.btn-info"));
+        TestUtils.Simulate.click($(view, "button.btn-edit"));
 
-      sinon.assert.calledOnce(ArticleActions.edit);
-      sinon.assert.calledWithExactly(ArticleActions.edit, fakeArticle);
-    });
+        sinon.assert.calledOnce(ArticleActions.edit);
+        sinon.assert.calledWithExactly(ArticleActions.edit, fakeArticle);
+      });
 
-    it("should call the delete action on click on the delete button", function() {
-      sandbox.stub(window, "confirm", returns(true));
-      sandbox.stub(ArticleActions, "delete");
+      it("should call the delete action on click on the delete button", function() {
+        sandbox.stub(window, "confirm", returns(true));
+        sandbox.stub(ArticleActions, "delete");
 
-      TestUtils.Simulate.click($(view, "button.btn-danger"));
+        TestUtils.Simulate.click($(view, "button.btn-delete"));
 
-      sinon.assert.calledOnce(ArticleActions.delete);
-      sinon.assert.calledWithExactly(ArticleActions.delete, fakeArticle);
+        sinon.assert.calledOnce(ArticleActions.delete);
+        sinon.assert.calledWithExactly(ArticleActions.delete, fakeArticle);
+      });
+
+      it("should call the markAsRead action on click on the Mark As Read button",
+        function() {
+          sandbox.stub(ArticleActions, "markAsRead");
+
+          TestUtils.Simulate.click($(view, "button.btn-mark-as-read"));
+
+          sinon.assert.calledOnce(ArticleActions.markAsRead);
+          sinon.assert.calledWithExactly(ArticleActions.markAsRead, fakeArticle);
+        });
+
+      it("should call the archive action on click on the Mark As Read button",
+        function() {
+          sandbox.stub(ArticleActions, "archive");
+
+          TestUtils.Simulate.click($(view, "button.btn-archive"));
+
+          sinon.assert.calledOnce(ArticleActions.archive);
+          sinon.assert.calledWithExactly(ArticleActions.archive, fakeArticle);
+        });
     });
   });
 });

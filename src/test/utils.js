@@ -59,3 +59,8 @@ export function returns(what) {
     return what;
   };
 }
+
+export function findELByContent(view, selector, text) {
+  var match = $$(view, selector).filter(node => node.textContent === text);
+  return match.length ? match[0] : null;
+}

@@ -3,6 +3,8 @@
 import DocBrown from "docbrown";
 import sampleArticles from "../data/samples.json";
 
+import { ArticleConstants } from "./api";
+
 export var Dispatcher = DocBrown.createDispatcher();
 
 export var AuthActions = DocBrown.createActions(Dispatcher, [
@@ -55,7 +57,8 @@ export var ArticleActions = DocBrown.createActions(Dispatcher, [
   "import",
   "open",
   "close",
-  "markAsRead"
+  "markAsRead",
+  "archive"
 ]);
 
 export var ArticleStore = DocBrown.createStore({
@@ -77,6 +80,7 @@ export var ArticleStore = DocBrown.createStore({
         console.info("ArticleStore state changed", state);
       });
     }
+    this.clientIdentifier = options.clientIdentifier || "readinglist-client";
   },
 
   getInitialState: function() {
@@ -87,14 +91,20 @@ export var ArticleStore = DocBrown.createStore({
       edit: false,
       error: null,
       errorType: null,
+      filters: {status: "0", unread: true},
       hasNext: false,
       totalRecords: 0,
     };
   },
 
   updateArticleList: function(articles) {
+    // Simply ignore articles marked as deleted for now.
+    // XXX Reflect this in local store once we got one.
+    var filteredArticles = articles.filter(article => {
+      return article.status !== ArticleConstants.status.DELETED;
+    });
     this.setState({
-      articles: articles,
+      articles: filteredArticles,
       hasNext: this.api.hasNext(),
       totalRecords: this.api.totalRecords,
     });
@@ -179,9 +189,10 @@ export var ArticleStore = DocBrown.createStore({
     this.setError(err, "delete");
   },
 
-  list: function(params) {
+  list: function(filters={}) {
     this.resetError();
-    return this.api.listArticles(params);
+    this.setState({filters: Object.assign({}, this.state.filters, filters)});
+    return this.api.listArticles(this.state.filters);
   },
 
   listSuccess: function(articles) {
@@ -246,7 +257,35 @@ export var ArticleStore = DocBrown.createStore({
   },
 
   markAsRead: function(article) {
-    // XXX todo
+    return this.api.updateArticle({
+      id: article.id,
+      unread: false,
+      marked_read_by: this.clientIdentifier,
+      marked_read_on: new Date().getTime()
+    });
+  },
+
+  markAsReadSuccess: function() {
+    ArticleActions.list();
+  },
+
+  markAsReadError: function(err) {
+    this.setError(err, "markAsRead");
+  },
+
+  archive: function(article) {
+    return this.api.updateArticle({
+      id: article.id,
+      status: ArticleConstants.status.ARCHIVED
+    });
+  },
+
+  archiveSuccess: function() {
+    ArticleActions.list();
+  },
+
+  archiveError: function(err) {
+    this.setError(err, "archive");
   }
 });
 

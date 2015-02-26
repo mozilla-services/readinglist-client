@@ -238,6 +238,16 @@ describe("API", function() {
           done();
         }).catch(done);
       });
+
+    it("should apply passed filters", function(done) {
+      api.client = sandbox.stub().returns(Promise.resolve({entity: {items: []}}));
+
+      api.listArticles({unread: false, status: "1"}).then(function() {
+        sinon.assert.calledOnce(api.client);
+        sinon.assert.calledWithMatch(api.client, {params: {unread: false, status: "1"}});
+        done();
+      }).catch(done);
+    });
   });
 
   describe("#hasNext()", function() {
@@ -343,6 +353,12 @@ describe("API", function() {
       serverRespond({body: {title: "bar"}});
 
       return api.updateArticle({id: 42}).should.become({title: "bar"});
+    });
+
+    it("should update an article individual field", function() {
+      serverRespond({body: {unread: false}});
+
+      return api.updateArticle({id: 42, unread: false}).should.become({unread: false});
     });
   });
 
