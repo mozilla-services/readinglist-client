@@ -32,7 +32,7 @@ export default React.createClass({
         <h1><a href="./">Readinglist</a></h1>
         {this.renderError()}
         <div className="row">
-          <div className="col-md-3">
+          <div className="col-md-4">
             <Auth />
             <ArticleList articles={this.state.articles}
                          filters={this.state.filters}
@@ -40,7 +40,7 @@ export default React.createClass({
                          hasNext={this.state.hasNext}
                          totalRecords={this.state.totalRecords} />
           </div>
-          <div className="col-md-9">
+          <div className="col-md-8">
             <ArticleForm show={this.state.edit} current={this.state.current} />
             {this.state.current ?
               <Viewer contents={this.state.currentContents}
