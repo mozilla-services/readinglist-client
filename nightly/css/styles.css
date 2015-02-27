@@ -10,12 +10,6 @@
   margin-left: .4em;
 }
 
-iframe {
-  width: 100%;
-  min-height: 80vh;
-  border: none;
-}
-
 .list-group-item.active h4 a {
   color: #fff;
 }
