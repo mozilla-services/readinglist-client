@@ -124,7 +124,7 @@ describe("API", function() {
         get hash() {
           return `#auth:${sampleValidToken}`;
         },
-        set hash(v) {}
+        set hash() {}
       };
 
       api.checkAuth();
