@@ -66,7 +66,7 @@ var FilterToggler = React.createClass({
     return (
       <div className="btn-group" role="group">{
         this.props.choices.map((choice, i) => {
-          return <Button key={i} label={choice.label} size="sm"
+          return <Button key={i} label={choice.label} size="xs"
                          type={this.props.valueCheck === choice.value ? "info" : "default"}
                          onClick={this.props.changeHandler(choice.value)} />;
         })
@@ -97,12 +97,12 @@ var Filters = React.createClass({
   render: function() {
     return (
       <div className="list-filters">
-        <div className="col-xs-6 text-left">
+        <div className="list-filter-toggle col-xs-5 text-left">
           <FilterToggler choices={Filters.unreadChoices}
                          valueCheck={this.props.filters.unread}
                          changeHandler={this.filterClickHandler("unread")} />
         </div>
-        <div className="col-xs-6 text-right">
+        <div className="list-filter-toggle col-xs-7 text-right">
           <FilterToggler choices={Filters.statusChoices}
                          valueCheck={this.props.filters.status}
                          changeHandler={this.filterClickHandler("status")} />

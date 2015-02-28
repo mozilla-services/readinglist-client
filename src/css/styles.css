@@ -17,3 +17,7 @@
 .panel-title .badge {
   margin-left: .5em;
 }
+
+.list-filters .list-filter-toggle {
+  padding: 0;
+}

@@ -25,10 +25,18 @@ var DeleteButton = React.createClass({
 });
 
 var MarkAsReadButton = React.createClass({
+  onClick: function() {
+    ArticleActions[this.props.unread ? "markAsRead" : "markAsUnread"]({
+      id: this.props.id
+    });
+  },
+
   render: function() {
     return (
-      <Button className="btn-mark-as-read" type="default" title="Mark as read"
-              size="xs" icon="ok" onClick={this.props.onClick} />
+      <Button className="btn-mark-as-read" type="default" size="xs"
+              title={`Mark as ${this.props.unread ? "read" : "unread"}`}
+              icon={this.props.unread ? "eye-close" : "eye-open"}
+              onClick={this.onClick} />
     );
   }
 });
@@ -67,14 +75,14 @@ export default React.createClass({
           </a>
           <sup>{this.props.unread ? "unread" : ""}</sup>
         </h4>
-        <p className="ArticleEntry__info col-md-9">
+        <p className="ArticleEntry__info col-md-8">
           {`Added by ${this.props.added_by} on ${this._formattedAddedOn()}`}
         </p>
-        <div className="ArticleEntry__actions col-md-3 text-right"
+        <div className="ArticleEntry__actions col-md-4 text-right"
              role="group" aria-label="Actions">
           <div className="btn-group">
             <ArchiveButton onClick={this.callAction("archive")} />
-            <MarkAsReadButton onClick={this.callAction("markAsRead")} />
+            <MarkAsReadButton id={this.props.id} unread={this.props.unread} />
             <EditButton onClick={this.callAction("edit")} />
             <DeleteButton onClick={this.callAction("delete", {confirm: true})} />
           </div>
