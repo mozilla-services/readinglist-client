@@ -25,7 +25,7 @@ export const ArticleConstants = Object.freeze({
  * @link https://github.com/cujojs/rest/blob/master/docs/interceptors.md#custom-interceptors
  */
 export var authInterceptor = interceptor({
-  request: function (request, config, meta) {
+  request: function (request, config) {
     var headers = request.headers || (request.headers = {});
     var authToken = config.authTokenGetter();
     if (authToken) {
@@ -149,7 +149,9 @@ export default class API {
 
     // Check for auth token passed as current URL hash;
     var tokenMatch = /^#auth:([a-f0-9]{64})$/.exec(this.window.location.hash);
-    if (!tokenMatch) return null;
+    if (!tokenMatch) {
+      return null;
+    }
 
     // Clear the token from the current url.
     this.window.location.hash = "";

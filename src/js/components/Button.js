@@ -18,8 +18,12 @@ export default React.createClass({
       return classes;
     }, {btn: true});
 
-    if (this.props.type) classes["btn-" + this.props.type] = true;
-    if (this.props.size) classes["btn-" + this.props.size] = true;
+    if (this.props.type) {
+      classes["btn-" + this.props.type] = true;
+    }
+    if (this.props.size) {
+      classes["btn-" + this.props.size] = true;
+    }
 
     var mergedProps = Object.assign({}, this.props, {
       className: React.addons.classSet(classes)

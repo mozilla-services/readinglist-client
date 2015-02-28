@@ -9,8 +9,9 @@ export default React.createClass({
 
   // XXX move to own component
   renderPanelBody: function() {
-    if (this.props.bodyWrap)
+    if (this.props.bodyWrap) {
       return <div className="panel-body">{this.props.children}</div>;
+    }
     return this.props.children;
   },
 

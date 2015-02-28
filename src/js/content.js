@@ -58,7 +58,9 @@ export default class ContentManager {
    * @return {Promise}
    */
   load(article) {
-    if (!this.has(article)) return this.fetch(article);
+    if (!this.has(article)) {
+      return this.fetch(article);
+    }
     return Promise.resolve(this.storage.getItem(this.keyPrefix + article.id));
   }
 
@@ -86,7 +88,8 @@ export default class ContentManager {
    * @param  {String} contents
    */
   save(article, contents) {
-    if (typeof contents === "string" && contents.length)
+    if (typeof contents === "string" && contents.length) {
       this.storage.setItem(this.keyPrefix + article.id, contents);
+    }
   }
 }

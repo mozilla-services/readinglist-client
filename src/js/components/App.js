@@ -22,8 +22,9 @@ export default React.createClass({
 
   renderError: function() {
     // XXX we'd rather want a notification list here.
-    if (this.state.error)
+    if (this.state.error) {
       return <Alert>{this.state.error.message}</Alert>;
+    }
   },
 
   render: function() {

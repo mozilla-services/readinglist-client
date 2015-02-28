@@ -23,6 +23,7 @@ describe("Batch", function() {
 
   describe("#constructor()", function() {
     it("should require an API instance", function() {
+      /*eslint new-cap:0*/
       expect(function() {
         new Batch();
       }).to.Throw(/Invalid API instance/);

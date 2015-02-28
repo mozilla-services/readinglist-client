@@ -53,8 +53,9 @@ export default React.createClass({
   },
 
   render: function() {
-    if (!this.props.show)
+    if (!this.props.show) {
       return null;
+    }
     return (
       <Panel title={`${this._getVerb()} an article`} actionButtons={[<CloseButton />]}>
         <form method="post" onSubmit={this.handleSubmit}>

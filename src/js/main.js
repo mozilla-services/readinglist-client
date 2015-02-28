@@ -23,4 +23,6 @@ stores.register({
   })
 });
 
-React.render(<App />, document.querySelector("#app"));
+/*eslint new-cap:0*/
+// XXX https://github.com/babel/babel-eslint/issues/17
+React.render(App(), document.querySelector("#app"));

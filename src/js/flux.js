@@ -127,7 +127,7 @@ export var ArticleStore = DocBrown.createStore({
     return this.api.createArticle(params);
   },
 
-  createSuccess: function(article) {
+  createSuccess: function() {
     ArticleActions.list();
   },
 
@@ -226,9 +226,9 @@ export var ArticleStore = DocBrown.createStore({
 
   importSuccess: function(response) {
     // XXX We want proper notification messages displayed to the end user here
-    response.responses.forEach(response => {
+    response.responses.forEach(res => {
       if (this.debug) {
-        console.log("imported", response.body.title, "HTTP", response.status);
+        console.log("imported", res.body.title, "HTTP", res.status);
       }
     });
     ArticleActions.list();
@@ -297,8 +297,9 @@ function StoreRegistry() {
     },
     register: function(stores) {
       for (var name in stores) {
-        if (this.has(name))
+        if (this.has(name)) {
           throw new Error(`Store ${name} is already registered.`);
+        }
         _stores[name] = stores[name];
       }
     },
@@ -306,7 +307,9 @@ function StoreRegistry() {
       return _stores.hasOwnProperty(name);
     },
     get: function(name) {
-      if (this.has(name)) return _stores[name];
+      if (this.has(name)) {
+        return _stores[name];
+      }
       throw new Error(`No '${name}' store registered.`);
     },
     getter: function(name) {
