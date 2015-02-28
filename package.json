@@ -27,7 +27,7 @@
     "babel": "^4.6.*",
     "babel-eslint": "^1.0.*",
     "bootstrap": "^3.3.*",
-    "browserify": "^8.1.*",
+    "browserify": "^9.0.*",
     "docbrown": "^0.5.*",
     "envify": "^3.2.*",
     "gulp": "^3.8.*",
