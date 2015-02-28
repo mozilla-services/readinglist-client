@@ -39,7 +39,7 @@ module.exports = function(config) {
 
     browserify: {
       debug: true,
-      transform: ["6to5ify", "reactify"]
+      transform: ["babelify"]
     },
 
     // test results reporter to use

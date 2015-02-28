@@ -3,11 +3,12 @@
 "use strict";
 
 var gulp = require("gulp");
+var path = require("path");
 var browserify = require("browserify");
 var envify = require("envify/custom");
 var watchify = require("watchify");
 var source = require("vinyl-source-stream");
-var to5ify = require("6to5ify");
+var babelify = require("babelify");
 var uglify = require("gulp-uglify");
 var webserver = require("gulp-webserver");
 var karma = require("karma").server;
@@ -23,6 +24,7 @@ var opt = {
     open: true
   },
   envifyVars: {
+    CLIENT_DEVICE_IDENTIFIER:   process.env.CLIENT_DEVICE_IDENTIFIER,
     NODE_ENV:                   process.env.NODE_ENV || DEFAULT_ENV,
     MAX_ITEMS_PER_PAGE:         process.env.MAX_ITEMS_PER_PAGE,
     READABLE_PROXY_URL:         process.env.READABLE_PROXY_URL,
@@ -50,7 +52,7 @@ var opt = {
     dest: "bundle.js"
   },
   vendors: "vendors.js",
-  karmaConfigPath: __dirname + "/karma.conf.js"
+  karmaConfigPath: path.join(__dirname, "karma.conf.js")
 };
 
 /**
@@ -92,8 +94,7 @@ gulp.task("js:app", ["js:vendors"], function() {
   return browserify(opt.app.src)
     .external("react/addons")
     .external("docbrown")
-    .transform(to5ify)
-    .transform("reactify")
+    .transform(babelify)
     .transform(envify(opt.envifyVars))
     .bundle()
     .pipe(source(opt.app.dest))
@@ -120,7 +121,7 @@ gulp.task("server", function() {
 /**
  * Run test once and exit.
  */
-gulp.task("test", function(done) {
+gulp.task("test", function() {
   karma.start({
     configFile: opt.karmaConfigPath,
     autoWatch: false,
@@ -149,8 +150,7 @@ gulp.task("watchify", function() {
   var b = browserify(opt.app.src, watchify.args)
     .external("react/addons")
     .external("docbrown")
-    .transform(to5ify)
-    .transform("reactify")
+    .transform(babelify)
     .transform(envify(opt.envifyVars));
 
   function updateBundle(w) {

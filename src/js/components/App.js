@@ -1,7 +1,7 @@
 "use strict";
 
 // Load 6to5 polyfills http://6to5.org/docs/usage/polyfill/
-import "6to5/polyfill";
+import "babel/polyfill";
 
 import React from "react/addons";
 import DocBrown from "docbrown";
