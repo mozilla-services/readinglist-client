@@ -49,6 +49,7 @@ export default class API {
    */
   constructor(baseUrl, options={}) {
     this.baseUrl = baseUrl;
+    this.clientIdentifier = options.clientIdentifier || "readinglist-client";
     this.debug = !!options.debug;
     this.client = options.client || this.createClient();
     this.window = options.window || window;
@@ -103,7 +104,7 @@ export default class API {
     return rest
       .wrap(pathPrefix, {prefix: this.baseUrl})
       .wrap(errorCode, {code: 400})
-      .wrap(defaultRequest, {headers: {"Requested-With": "readinglist-client"}})
+      .wrap(defaultRequest, {headers: {"Requested-With": this.clientIdentifier}})
       .wrap(mime, {mime: "application/json;encoding=UTF-8"})
       .wrap(hateoas)
       .wrap(authInterceptor, {authTokenGetter: () => this._authToken});

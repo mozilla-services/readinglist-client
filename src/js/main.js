@@ -12,7 +12,10 @@ var proxyServerUrl = process.env.READABLE_PROXY_URL    || "http://0.0.0.0:3000/a
 var clientIdentifier = process.env.CLIENT_DEVICE_IDENTIFIER || "readinglist-client";
 var debug = process.env.NODE_ENV === "development";
 
-var api = new API(serverUrl, {debug: debug});
+var api = new API(serverUrl, {
+  clientIdentifier: clientIdentifier,
+  debug: debug
+});
 var contentManager = new ContentManager(proxyServerUrl, {debug: debug});
 
 stores.register({
