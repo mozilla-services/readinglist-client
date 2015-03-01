@@ -49,7 +49,22 @@ var opt = {
     src: "./src/js/main.js",
     dest: "bundle.js"
   },
-  vendors: "vendors.js",
+  vendors: {
+    target: "vendors.js",
+    modules: [
+      "babel/polyfill",
+      "docbrown",
+      "react/addons",
+      "rest",
+      "rest",
+      "rest/interceptor/pathPrefix",
+      "rest/interceptor/mime",
+      "rest/interceptor/errorCode",
+      "rest/interceptor/defaultRequest",
+      "rest/interceptor/hateoas",
+      "rest/interceptor"
+    ]
+  },
   karmaConfigPath: path.join(__dirname, "karma.conf.js")
 };
 
@@ -88,23 +103,21 @@ gulp.task("assets:fonts", function() {
  */
 gulp.task("js", ["js:vendors", "js:app"]);
 
+gulp.task("js:vendors", function() {
+  return browserify()
+    .require(opt.vendors.modules)
+    .bundle()
+    .pipe(source(opt.vendors.target))
+    .pipe(gulp.dest(opt.outputFolder + "/js"));
+});
+
 gulp.task("js:app", ["js:vendors"], function() {
   return browserify(opt.app.src)
-    .external("react/addons")
-    .external("docbrown")
+    .external(opt.vendors.modules)
     .transform(babelify)
     .transform(envify(opt.envifyVars))
     .bundle()
     .pipe(source(opt.app.dest))
-    .pipe(gulp.dest(opt.outputFolder + "/js"));
-});
-
-gulp.task("js:vendors", function() {
-  return browserify()
-    .require("react/addons")
-    .require("docbrown")
-    .bundle()
-    .pipe(source(opt.vendors))
     .pipe(gulp.dest(opt.outputFolder + "/js"));
 });
 
@@ -146,8 +159,7 @@ gulp.task("tdd", function(done) {
  */
 gulp.task("watchify", function() {
   var b = browserify(opt.app.src, watchify.args)
-    .external("react/addons")
-    .external("docbrown")
+    .external(opt.vendors.modules)
     .transform(babelify)
     .transform(envify(opt.envifyVars));
 
