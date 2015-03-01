@@ -15,8 +15,13 @@ export var SignIn = React.createClass({
 
   render: function() {
     return (
-      <Button type="info" label="Sign in"
-              onClick={this.handleSigninClick} />
+      <div>
+        <Button type="info" label="Sign in your Firefox Account" onClick={this.handleSigninClick} />
+        {` or `}
+        <a href="https://accounts.firefox.com/signup" target="_blank">
+          Sign up for one
+        </a>.
+      </div>
     );
   }
 });

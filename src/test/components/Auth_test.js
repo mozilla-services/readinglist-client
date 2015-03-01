@@ -41,7 +41,13 @@ describe("Auth tests", function() {
 
     it("should render a signin button", function() {
       expect(signinButton).not.eql(null);
-      expect(signinButton.textContent).eql("Sign in");
+      expect(signinButton.textContent).match(/Sign in/);
+    });
+
+    it("should render a register link", function() {
+      var registerLink = $(view, "a");
+      expect(registerLink).not.eql(null);
+      expect(registerLink.textContent).match(/Sign up/);
     });
 
     it("should trigger the signin AuthAction", function() {
