@@ -56,7 +56,6 @@ var opt = {
       "docbrown",
       "react/addons",
       "rest",
-      "rest",
       "rest/interceptor/pathPrefix",
       "rest/interceptor/mime",
       "rest/interceptor/errorCode",
