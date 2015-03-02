@@ -15,9 +15,9 @@ export const AUTH_TOKEN_KEYNAME = "readinglist:auth:token";
 export const MAX_ITEMS_PER_PAGE = process.env.MAX_ITEMS_PER_PAGE || 10;
 export const ArticleConstants = Object.freeze({
   sort: {
-    ADDED_ON_DESC: "-added_on",
+    ADDED_ON_DESC:      "-added_on",
     LAST_MODIFIED_DESC: "-last_modified",
-    TITLE_ASC: "title",
+    TITLE_ASC:          "title",
   }
 });
 
