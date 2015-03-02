@@ -17,3 +17,12 @@
 .panel-title .badge {
   margin-left: .5em;
 }
+
+.list-filters {
+  padding: .2em .5em .5em .5em;
+  line-height: 2em;
+}
+
+.list-filter-toggler {
+  margin-left: .5em;
+}
