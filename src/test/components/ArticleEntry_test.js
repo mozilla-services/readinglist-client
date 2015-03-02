@@ -23,6 +23,7 @@ describe("ArticleEntry tests", function() {
 
   describe("ArticleEntry", function() {
     var view, fakeArticle = {
+        "id": "id42",
         "added_by": "niko",
         "added_on": 1423486853721,
         "title": "Libération",
@@ -90,7 +91,7 @@ describe("ArticleEntry tests", function() {
           TestUtils.Simulate.click($(view, "button.btn-mark-as-read"));
 
           sinon.assert.calledOnce(ArticleActions.markAsRead);
-          sinon.assert.calledWithExactly(ArticleActions.markAsRead, fakeArticle);
+          sinon.assert.calledWithMatch(ArticleActions.markAsRead, {id: fakeArticle.id});
         });
 
       it("should call the archive action on click on the Mark As Read button",
@@ -100,7 +101,7 @@ describe("ArticleEntry tests", function() {
           TestUtils.Simulate.click($(view, "button.btn-archive"));
 
           sinon.assert.calledOnce(ArticleActions.archive);
-          sinon.assert.calledWithExactly(ArticleActions.archive, fakeArticle);
+          sinon.assert.calledWithMatch(ArticleActions.archive, {id: fakeArticle.id});
         });
     });
   });
