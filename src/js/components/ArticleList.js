@@ -64,10 +64,11 @@ var PanelTitle = React.createClass({
 var FilterToggler = React.createClass({
   render: function() {
     return (
-      <div className="btn-group" role="group">{
+      <div className="btn-group list-filter-toggler" role="group">{
         this.props.choices.map((choice, i) => {
           return <Button key={i} label={choice.label} size="xs"
                          type={this.props.valueCheck === choice.value ? "info" : "default"}
+                         icon={choice.icon || ""}
                          onClick={this.props.changeHandler(choice.value)} />;
         })
       }</div>
@@ -85,6 +86,17 @@ var Filters = React.createClass({
       {label: "Default",  value: ArticleConstants.status.DEFAULT},
       {label: "Archived", value: ArticleConstants.status.ARCHIVED},
       {label: "Deleted",  value: ArticleConstants.status.DELETED},
+    ],
+    sortChoices: [
+      {label: "Last modified",
+       value: ArticleConstants.sort.LAST_MODIFIED_DESC,
+       icon: "sort-by-order-alt"},
+      {label: "Date added",
+       value: ArticleConstants.sort.ADDED_ON_DESC,
+       icon: "sort-by-order-alt"},
+      {label: "Title",
+       value: ArticleConstants.sort.TITLE_ASC,
+       icon: "sort-by-alphabet"},
     ]
   },
 
@@ -94,19 +106,22 @@ var Filters = React.createClass({
     };
   },
 
+  sortClickHandler: function(value) {
+    return () => ArticleActions.list({_sort: value});
+  },
+
   render: function() {
     return (
-      <div className="list-filters">
-        <div className="list-filter-toggle col-xs-5 text-left">
-          <FilterToggler choices={Filters.unreadChoices}
-                         valueCheck={this.props.filters.unread}
-                         changeHandler={this.filterClickHandler("unread")} />
-        </div>
-        <div className="list-filter-toggle col-xs-7 text-right">
-          <FilterToggler choices={Filters.statusChoices}
-                         valueCheck={this.props.filters.status}
-                         changeHandler={this.filterClickHandler("status")} />
-        </div>
+      <div className="list-filters text-center">
+        <FilterToggler choices={Filters.unreadChoices}
+                       valueCheck={this.props.filters.unread}
+                       changeHandler={this.filterClickHandler("unread")} />
+        <FilterToggler choices={Filters.statusChoices}
+                       valueCheck={this.props.filters.status}
+                       changeHandler={this.filterClickHandler("status")} />
+        <FilterToggler choices={Filters.sortChoices}
+                       valueCheck={this.props.filters._sort}
+                       changeHandler={this.sortClickHandler} />
       </div>
     );
   }
@@ -127,9 +142,7 @@ export default React.createClass({
     return (
       <Panel title={<PanelTitle totalRecords={this.props.totalRecords} />}
              bodyWrap={false} actionButtons={actionButtons}>
-        <div className="panel-body">
-          <Filters filters={this.props.filters} />
-        </div>
+        <Filters filters={this.props.filters} />
         <ul className="list-group">{
           this.props.articles.map(article => {
             var classes = ReactAddons.classSet({

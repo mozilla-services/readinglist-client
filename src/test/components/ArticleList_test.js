@@ -122,7 +122,8 @@ describe("ArticleList tests", function() {
           articles={[]}
           filters={{
             unread: false,
-            status: ArticleConstants.status.ARCHIVED
+            status: ArticleConstants.status.ARCHIVED,
+            _sort: ArticleConstants.sort.LAST_MODIFIED_DESC,
           }}
         />);
         findFilterButton = findELByContent.bind(null, view, ".list-filters button");
@@ -182,6 +183,42 @@ describe("ArticleList tests", function() {
           sinon.assert.calledOnce(ArticleActions.list);
           sinon.assert.calledWithExactly(ArticleActions.list, {
             status: ArticleConstants.status.DELETED
+          });
+        });
+      });
+
+      describe("sort filters", function() {
+        it("should reflect sort filter state", function() {
+          // Note: The `btn-info` class highlights the filter button.
+          expect(findFilterButton("Last modified").classList.contains("btn-info")).eql(true);
+          expect(findFilterButton("Date added").classList.contains("btn-info")).eql(false);
+          expect(findFilterButton("Title").classList.contains("btn-info")).eql(false);
+        });
+
+        it("should order by last_modified", function() {
+          TestUtils.Simulate.click(findFilterButton("Last modified"));
+
+          sinon.assert.calledOnce(ArticleActions.list);
+          sinon.assert.calledWithExactly(ArticleActions.list, {
+            _sort: ArticleConstants.sort.LAST_MODIFIED_DESC
+          });
+        });
+
+        it("should order by added_on", function() {
+          TestUtils.Simulate.click(findFilterButton("Date added"));
+
+          sinon.assert.calledOnce(ArticleActions.list);
+          sinon.assert.calledWithExactly(ArticleActions.list, {
+            _sort: ArticleConstants.sort.ADDED_ON_DESC
+          });
+        });
+
+        it("should order by title", function() {
+          TestUtils.Simulate.click(findFilterButton("Title"));
+
+          sinon.assert.calledOnce(ArticleActions.list);
+          sinon.assert.calledWithExactly(ArticleActions.list, {
+            _sort: ArticleConstants.sort.TITLE_ASC
           });
         });
       });

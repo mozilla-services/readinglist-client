@@ -17,6 +17,11 @@ export const ArticleConstants = Object.freeze({
     DEFAULT:  0,
     ARCHIVED: 1,
     DELETED:  2,
+  },
+  sort: {
+    ADDED_ON_DESC: "-added_on",
+    LAST_MODIFIED_DESC: "-last_modified",
+    TITLE_ASC: "title",
   }
 });
 
@@ -203,7 +208,7 @@ export default class API {
   listArticles(filters={}) {
     this._nextPageUrl = null;
     var q = Object.assign({
-      _sort:  "-last_modified",
+      _sort:  ArticleConstants.sort.LAST_MODIFIED_DESC,
       _limit: MAX_ITEMS_PER_PAGE
     }, filters);
     return this._wrap(this.client({

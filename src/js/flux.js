@@ -91,7 +91,11 @@ export var ArticleStore = DocBrown.createStore({
       edit: false,
       error: null,
       errorType: null,
-      filters: {status: "0", unread: true},
+      filters: {
+        status: ArticleConstants.status.DEFAULT,
+        _sort: ArticleConstants.sort.LAST_MODIFIED_DESC,
+        unread: true,
+      },
       hasNext: false,
       totalRecords: 0,
     };
