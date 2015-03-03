@@ -122,7 +122,7 @@ describe("ArticleList tests", function() {
           articles={[]}
           filters={{
             unread: false,
-            status: ArticleConstants.status.ARCHIVED,
+            archived: true,
             _sort: ArticleConstants.sort.LAST_MODIFIED_DESC,
           }}
         />);
@@ -156,15 +156,14 @@ describe("ArticleList tests", function() {
           // Note: The `btn-info` class highlights the filter button.
           expect(findFilterButton("Default").classList.contains("btn-info")).eql(false);
           expect(findFilterButton("Archived").classList.contains("btn-info")).eql(true);
-          expect(findFilterButton("Deleted").classList.contains("btn-info")).eql(false);
         });
 
-        it("should list default articles", function() {
+        it("should list unarchived articles", function() {
           TestUtils.Simulate.click(findFilterButton("Default"));
 
           sinon.assert.calledOnce(ArticleActions.list);
           sinon.assert.calledWithExactly(ArticleActions.list, {
-            status: ArticleConstants.status.DEFAULT
+            archived: false
           });
         });
 
@@ -173,16 +172,7 @@ describe("ArticleList tests", function() {
 
           sinon.assert.calledOnce(ArticleActions.list);
           sinon.assert.calledWithExactly(ArticleActions.list, {
-            status: ArticleConstants.status.ARCHIVED
-          });
-        });
-
-        it("should list deleted articles", function() {
-          TestUtils.Simulate.click(findFilterButton("Deleted"));
-
-          sinon.assert.calledOnce(ArticleActions.list);
-          sinon.assert.calledWithExactly(ArticleActions.list, {
-            status: ArticleConstants.status.DELETED
+            archived: true
           });
         });
       });

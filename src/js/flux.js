@@ -91,11 +91,7 @@ export var ArticleStore = DocBrown.createStore({
       edit: false,
       error: null,
       errorType: null,
-      filters: {
-        status: ArticleConstants.status.DEFAULT,
-        _sort: ArticleConstants.sort.LAST_MODIFIED_DESC,
-        unread: true,
-      },
+      filters: this.api.defaultFilters,
       hasNext: false,
       totalRecords: 0,
     };
@@ -104,9 +100,7 @@ export var ArticleStore = DocBrown.createStore({
   updateArticleList: function(articles) {
     // Simply ignore articles marked as deleted for now.
     // XXX Reflect this in local store once we got one.
-    var filteredArticles = articles.filter(article => {
-      return article.status !== ArticleConstants.status.DELETED;
-    });
+    var filteredArticles = articles.filter(article => !article.deleted);
     this.setState({
       articles: filteredArticles,
       hasNext: this.api.hasNext(),
@@ -278,10 +272,7 @@ export var ArticleStore = DocBrown.createStore({
   },
 
   archive: function(article) {
-    return this.api.updateArticle({
-      id: article.id,
-      status: ArticleConstants.status.ARCHIVED
-    });
+    return this.api.updateArticle({id: article.id, archived: true});
   },
 
   archiveSuccess: function() {

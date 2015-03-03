@@ -13,11 +13,6 @@ import interceptor from "rest/interceptor";
 export const AUTH_TOKEN_KEYNAME = "readinglist:auth:token";
 export const MAX_ITEMS_PER_PAGE = process.env.MAX_ITEMS_PER_PAGE || 10;
 export const ArticleConstants = Object.freeze({
-  status: {
-    DEFAULT:  0,
-    ARCHIVED: 1,
-    DELETED:  2,
-  },
   sort: {
     ADDED_ON_DESC: "-added_on",
     LAST_MODIFIED_DESC: "-last_modified",
@@ -63,12 +58,21 @@ export default class API {
     this._totalRecords = 0;
   }
 
+  get defaultFilters() {
+    return {
+      _limit: MAX_ITEMS_PER_PAGE,
+      _sort:    ArticleConstants.sort.LAST_MODIFIED_DESC,
+      archived: false,
+      unread:   true,
+    };
+  }
+
   /**
    * Estimated total number of records.
    * @return {Number}
    */
   get totalRecords() {
-    return this._totalRecords;
+    return this._totalRecords || 0;
   }
 
   /**
@@ -207,14 +211,10 @@ export default class API {
    */
   listArticles(filters={}) {
     this._nextPageUrl = null;
-    var q = Object.assign({
-      _sort:  ArticleConstants.sort.LAST_MODIFIED_DESC,
-      _limit: MAX_ITEMS_PER_PAGE
-    }, filters);
     return this._wrap(this.client({
       path: "/articles",
-      params: q
-    })).then(res => res.items);
+      params: Object.assign(this.defaultFilters, filters)
+    })).then(res => res.items); // XXX process deleting local records if any
   }
 
   /**

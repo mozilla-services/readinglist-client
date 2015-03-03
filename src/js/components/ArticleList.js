@@ -80,12 +80,11 @@ var Filters = React.createClass({
   statics: {
     unreadChoices: [
       {label: "Read",   value: false},
-      {label: "Unread", value: true}
+      {label: "Unread", value: true},
     ],
-    statusChoices: [
-      {label: "Default",  value: ArticleConstants.status.DEFAULT},
-      {label: "Archived", value: ArticleConstants.status.ARCHIVED},
-      {label: "Deleted",  value: ArticleConstants.status.DELETED},
+    archivedChoices: [
+      {label: "Default",  value: false},
+      {label: "Archived", value: true},
     ],
     sortChoices: [
       {label: "Last modified",
@@ -116,9 +115,9 @@ var Filters = React.createClass({
         <FilterToggler choices={Filters.unreadChoices}
                        valueCheck={this.props.filters.unread}
                        changeHandler={this.filterClickHandler("unread")} />
-        <FilterToggler choices={Filters.statusChoices}
-                       valueCheck={this.props.filters.status}
-                       changeHandler={this.filterClickHandler("status")} />
+        <FilterToggler choices={Filters.archivedChoices}
+                       valueCheck={this.props.filters.archived}
+                       changeHandler={this.filterClickHandler("archived")} />
         <FilterToggler choices={Filters.sortChoices}
                        valueCheck={this.props.filters._sort}
                        changeHandler={this.sortClickHandler} />

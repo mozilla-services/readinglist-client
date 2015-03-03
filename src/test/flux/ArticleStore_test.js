@@ -113,7 +113,7 @@ describe("ArticleStore", function() {
         url: "http://fake3",
         title: "Fake3",
         added_by: "User3",
-        status: ArticleConstants.status.DELETED
+        deleted: true
       }]);
 
       expect(store.state.articles).eql([art1, art2]);
@@ -565,7 +565,7 @@ describe("ArticleStore", function() {
       sinon.assert.calledOnce(store.api.updateArticle);
       sinon.assert.calledWithMatch(store.api.updateArticle, {
         id: art1.id,
-        status: ArticleConstants.status.ARCHIVED
+        archived: true
       });
     });
   });
