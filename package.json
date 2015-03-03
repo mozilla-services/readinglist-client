@@ -1,7 +1,7 @@
 {
   "name": "readinglist-client",
-  "version": "0.0.1",
-  "description": "Client webapp for the readinglist API.",
+  "version": "0.1.0",
+  "description": "Client webapp for the Mozilla readinglist API.",
   "main": "index.js",
   "scripts": {
     "build": "gulp dist",
