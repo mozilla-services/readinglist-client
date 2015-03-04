@@ -29,9 +29,7 @@ export default class Batch {
       // XXX could we factorize request definition with API methods? how?
       return {
         method: "POST",
-        // XXX repeating prefix for now to avoid 307
-        // https://github.com/mozilla-services/readinglist/issues/113
-        path: "/v0/articles",
+        path: "/articles",
         body: entity
       };
     }));
