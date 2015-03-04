@@ -30,8 +30,8 @@ export var AuthStore = DocBrown.createStore({
     return {authToken: null};
   },
 
-  signin: function() {
-    this.api.signinToFxA();
+  signin: function(params) {
+    this.api.signinToFxA(params);
   },
 
   checkAuth: function() {

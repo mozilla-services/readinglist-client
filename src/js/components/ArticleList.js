@@ -17,7 +17,7 @@ var AddButton = React.createClass({
 
   render: function() {
     return (
-      <Button className="btn-add" type="default" title="Add an article"
+      <Button className="btn-add" kind="default" title="Add an article"
               size="xs" icon="plus" onClick={this.handleAddClick} />
     );
   }
@@ -30,7 +30,7 @@ var ImportButton = React.createClass({
 
   render: function() {
     return (
-      <Button className="btn-import" type="info" title="Import sample articles"
+      <Button className="btn-import" kind="info" title="Import sample articles"
               size="xs" icon="download-alt" onClick={this.handleImportSampleClick} />
     );
   }
@@ -43,7 +43,7 @@ var NextPageButton = React.createClass({
 
   render: function() {
     return (
-      <Button type="info" size="sm" icon="chevron-right"
+      <Button kind="info" size="sm" icon="chevron-right"
               onClick={this.handleNextClick} label="Next" />
     );
   }
@@ -67,7 +67,7 @@ var FilterToggler = React.createClass({
       <div className="btn-group list-filter-toggler" role="group">{
         this.props.choices.map((choice, i) => {
           return <Button key={i} label={choice.label} size="xs"
-                         type={this.props.valueCheck === choice.value ? "info" : "default"}
+                         kind={this.props.valueCheck === choice.value ? "info" : "default"}
                          icon={choice.icon || ""}
                          onClick={this.props.changeHandler(choice.value)} />;
         })

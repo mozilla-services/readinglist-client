@@ -9,17 +9,24 @@ export default React.createClass({
   mixins: [ReactAddons.PureRenderMixin],
 
   getDefaultProps: function() {
-    return {className: "btn", type: "default", size: "md", primary: false};
+    return {
+      className: "btn",
+      kind: "default",
+      type: "button",
+      size: "md",
+      primary: false,
+      submit: false
+    };
   },
 
   render: function() {
-    var classes = this.props.className.split(" ").reduce(function(classes, cls) {
-      classes[cls] = true;
-      return classes;
+    var classes = this.props.className.split(" ").reduce(function(list, cls) {
+      list[cls] = true;
+      return list;
     }, {btn: true});
 
-    if (this.props.type) {
-      classes["btn-" + this.props.type] = true;
+    if (this.props.kind) {
+      classes["btn-" + this.props.kind] = true;
     }
     if (this.props.size) {
       classes["btn-" + this.props.size] = true;
@@ -30,7 +37,7 @@ export default React.createClass({
     });
 
     return (
-      <button type="button" {...mergedProps}>
+      <button {...mergedProps}>
         {this.props.icon ? <Icon type={this.props.icon} /> : null}
         {this.props.label ? <span>{this.props.label}</span> : null}
       </button>

@@ -9,19 +9,26 @@ import Panel from "./Panel";
 import Button from "./Button";
 
 export var SignIn = React.createClass({
-  handleSigninClick: function() {
-    AuthActions.signin();
+  handleSubmit: function(event) {
+    event.preventDefault();
+
+    AuthActions.signin({persistent: this.refs.remember.getDOMNode().checked});
   },
 
   render: function() {
     return (
-      <div>
-        <Button type="info" label="Sign in your Firefox Account" onClick={this.handleSigninClick} />
-        {` or `}
-        <a href="https://accounts.firefox.com/signup" target="_blank">
-          Sign up for one
-        </a>.
-      </div>
+      <form className="form-inline" onSubmit={this.handleSubmit}>
+        <p>
+          <Button kind="info" type="submit" label="Sign in your Firefox Account" />
+          {" or "}
+          <a href="https://accounts.firefox.com/signup" target="_blank">
+            Sign up for one
+          </a>.
+        </p>
+        <div className="checkbox">
+          <label><input ref="remember" type="checkbox" />{" "}Remember me</label>
+        </div>
+      </form>
     );
   }
 });
@@ -35,8 +42,7 @@ export var UserInfo = React.createClass({
     return (
       <div>
         <p>You're signed in.</p>
-        <Button type="danger" label="Sign out"
-                onClick={this.handleSignoutClick} />
+        <Button kind="danger" label="Sign out" onClick={this.handleSignoutClick} />
       </div>
     );
   }

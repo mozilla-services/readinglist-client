@@ -10,7 +10,7 @@ import { returns } from "./utils";
 import Batch from "../js/batch";
 
 describe("API", function() {
-  var sandbox, fakeWindow, server, api, baseUrl = "http://fake.server:8000/v0";
+  var sandbox, fakeWindow, server, api, baseUrl = "http://fake.server:8000/v1";
 
   var sampleValidToken = "1231231231231231231231231231231231231231231231231231231231abcdef";
 
@@ -86,18 +86,27 @@ describe("API", function() {
   });
 
   describe("#signIntoFxA()", function() {
-    it("should redirect to the FxA auth endpoint", function() {
+    beforeEach(function() {
       fakeWindow.location = {
         protocol: "http",
         hostname: "test.invalid",
         port:     "1234",
         pathname: "/fake-path",
       };
-
-      api.signinToFxA();
-
-      expect(fakeWindow.location).eql("http://fake.server:8000/v0/fxa-oauth/login?redirect=http%2F%2Ftest.invalid%3A1234%2Ffake-path%23auth%3A#");
     });
+
+    it("should redirect to the FxA auth endpoint", function() {
+      api.signinToFxA({persistent: false});
+
+      expect(fakeWindow.location).eql("http://fake.server:8000/v1/fxa-oauth/login?redirect=http%2F%2Ftest.invalid%3A1234%2Ffake-path%23persistent%3Afalse%3Bauth%3A#");
+    });
+
+    it("should redirect to the FxA auth endpoint with persistent param",
+      function() {
+        api.signinToFxA({persistent: true});
+
+        expect(fakeWindow.location).eql("http://fake.server:8000/v1/fxa-oauth/login?redirect=http%2F%2Ftest.invalid%3A1234%2Ffake-path%23persistent%3Atrue%3Bauth%3A#");
+      });
   });
 
   describe("#checkAuth()", function() {
@@ -116,13 +125,30 @@ describe("API", function() {
       sinon.assert.calledWithExactly(api.setAuthToken, sampleValidToken);
     });
 
+    it("should set any existing token from local storage", function() {
+      fakeWindow.sessionStorage = {
+        getItem: returns(undefined)
+      };
+      fakeWindow.localStorage = {
+        getItem: returns(sampleValidToken)
+      };
+
+      api.checkAuth();
+
+      sinon.assert.calledOnce(api.setAuthToken);
+      sinon.assert.calledWithExactly(api.setAuthToken, sampleValidToken);
+    });
+
     it("should set auth token from current URL hash", function() {
       fakeWindow.sessionStorage = {
         getItem: returns(undefined)
       };
+      fakeWindow.localStorage = {
+        getItem: returns(undefined)
+      };
       fakeWindow.location = {
         get hash() {
-          return `#auth:${sampleValidToken}`;
+          return `#persistent:false;auth:${sampleValidToken}`;
         },
         set hash(v) {void v;}
       };
@@ -130,7 +156,28 @@ describe("API", function() {
       api.checkAuth();
 
       sinon.assert.calledOnce(api.setAuthToken);
-      sinon.assert.calledWithExactly(api.setAuthToken, sampleValidToken);
+      sinon.assert.calledWithExactly(api.setAuthToken, sampleValidToken, false);
+    });
+
+    it("should set and persist auth token when the persistent param is set to " +
+       "true in the URL", function() {
+      fakeWindow.sessionStorage = {
+        getItem: returns(undefined)
+      };
+      fakeWindow.localStorage = {
+        getItem: returns(undefined)
+      };
+      fakeWindow.location = {
+        get hash() {
+          return `#persistent:true;auth:${sampleValidToken}`;
+        },
+        set hash(v) {void v;}
+      };
+
+      api.checkAuth();
+
+      sinon.assert.calledOnce(api.setAuthToken);
+      sinon.assert.calledWithExactly(api.setAuthToken, sampleValidToken, true);
     });
   });
 
@@ -151,6 +198,9 @@ describe("API", function() {
       fakeWindow.sessionStorage = {
         removeItem: sandbox.spy()
       };
+      fakeWindow.localStorage = {
+        removeItem: sandbox.spy()
+      };
 
       api.setAuthToken(null);
 
@@ -159,8 +209,26 @@ describe("API", function() {
         AUTH_TOKEN_KEYNAME);
     });
 
+    it("should remove auth token from local storage if null", function() {
+      fakeWindow.sessionStorage = {
+        removeItem: sandbox.spy()
+      };
+      fakeWindow.localStorage = {
+        removeItem: sandbox.spy()
+      };
+
+      api.setAuthToken(null);
+
+      sinon.assert.calledOnce(fakeWindow.localStorage.removeItem);
+      sinon.assert.calledWithExactly(fakeWindow.sessionStorage.removeItem,
+        AUTH_TOKEN_KEYNAME);
+    });
+
     it("should return the auth token", function() {
       fakeWindow.sessionStorage = {
+        setItem: sandbox.spy()
+      };
+      fakeWindow.localStorage = {
         setItem: sandbox.spy()
       };
 

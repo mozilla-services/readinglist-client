@@ -13,7 +13,7 @@ var CloseButton = React.createClass({
 
   render: function() {
     return (
-      <Button type="default" size="xs" icon="remove" title="Close this form"
+      <Button kind="default" size="xs" icon="remove" title="Close this form"
               onClick={this.handleClick} />
     );
   }
@@ -68,7 +68,7 @@ export default React.createClass({
                     placeholder="http://" valueLink={this.linkState("url")}
                     disabled={!!this.props.current} />
           </div>
-          <Button type="default" label={this._getVerb()} />
+          <Button kind="default" label={this._getVerb()} />
         </form>
       </Panel>
     );

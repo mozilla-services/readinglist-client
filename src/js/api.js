@@ -10,6 +10,7 @@ import defaultRequest from "rest/interceptor/defaultRequest";
 import hateoas from "rest/interceptor/hateoas";
 import interceptor from "rest/interceptor";
 
+const RE_AUTH = /^#persistent:(true|false);auth:([a-f0-9]{64})$/;
 export const AUTH_TOKEN_KEYNAME = "readinglist:auth:token";
 export const MAX_ITEMS_PER_PAGE = process.env.MAX_ITEMS_PER_PAGE || 10;
 export const ArticleConstants = Object.freeze({
@@ -133,14 +134,16 @@ export default class API {
    * Note: Massive side effect as this redirects the user to the FxA
    * signin/registration page; after users authenticate there, they are
    * redirected here again with a token passed as an url hash parameter.
+   *
+   * @param {Object} params Parameters object.
    */
-  signinToFxA() {
+  signinToFxA(params={persistent: false}) {
     var location = this.window.location;
     var redirectUrl = encodeURIComponent(
       location.protocol + "//" +
       location.hostname + ":"  +
       location.port     +
-      location.pathname + "#auth:"
+      location.pathname + `#persistent:${params.persistent};auth:`
     );
     this.window.location = `${this.baseUrl}/fxa-oauth/login?redirect=${redirectUrl}#`;
   }
@@ -153,12 +156,18 @@ export default class API {
   checkAuth() {
     // Check sessionStorage
     var authToken = this.window.sessionStorage.getItem(AUTH_TOKEN_KEYNAME);
+
+    // Check localStorage
+    if (!authToken) {
+      authToken = this.window.localStorage.getItem(AUTH_TOKEN_KEYNAME);
+    }
+
     if (authToken) {
       return this.setAuthToken(authToken);
     }
 
     // Check for auth token passed as current URL hash;
-    var tokenMatch = /^#auth:([a-f0-9]{64})$/.exec(this.window.location.hash);
+    var tokenMatch = RE_AUTH.exec(this.window.location.hash);
     if (!tokenMatch) {
       return null;
     }
@@ -166,20 +175,25 @@ export default class API {
     // Clear the token from the current url.
     this.window.location.hash = "";
 
-    return this.setAuthToken(tokenMatch[1]);
+    return this.setAuthToken(tokenMatch[2], tokenMatch[1] === "true");
   }
 
   /**
    * Sets and persists auth token.
-   * @param  {String} authToken The auth token.
-   * @return {String}           The provided auth token, for convenience.
+   * @param  {String}  authToken  The auth token.
+   * @param  {Boolean} persistent Persist auth token across sessions?
+   * @return {String}             The provided auth token, for convenience.
    */
-  setAuthToken(authToken)  {
+  setAuthToken(authToken, persistent=false)  {
     this._authToken = authToken;
-    if (typeof authToken === "string") {
-      this.window.sessionStorage.setItem(AUTH_TOKEN_KEYNAME, authToken);
-    } else {
+    if (!authToken) {
       this.window.sessionStorage.removeItem(AUTH_TOKEN_KEYNAME);
+      this.window.localStorage.removeItem(AUTH_TOKEN_KEYNAME);
+    } else {
+      this.window.sessionStorage.setItem(AUTH_TOKEN_KEYNAME, authToken);
+      if (persistent) {
+        this.window.localStorage.setItem(AUTH_TOKEN_KEYNAME, authToken);
+      }
     }
     return authToken;
   }

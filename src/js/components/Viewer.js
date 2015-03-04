@@ -11,7 +11,7 @@ import Panel from "./Panel";
 var CloseButton = React.createClass({
   render: function() {
     return (
-      <Button type="default" size="xs" icon="remove" title="Close"
+      <Button kind="default" size="xs" icon="remove" title="Close"
               className="btn-close" onClick={this.props.onClick} />
     );
   }
@@ -20,7 +20,7 @@ var CloseButton = React.createClass({
 var MarkAsReadButton = React.createClass({
   render: function() {
     return (
-      <Button className="btn-mark-as-read" type="default" title="Mark as read"
+      <Button className="btn-mark-as-read" kind="default" title="Mark as read"
               size="xs" icon="ok" onClick={this.props.onClick} />
     );
   }

@@ -9,7 +9,7 @@ import Button from "./Button";
 var EditButton = React.createClass({
   render: function() {
     return (
-      <Button className="btn-edit" type="default" size="xs" title="Edit"
+      <Button className="btn-edit" kind="default" size="xs" title="Edit"
               onClick={this.props.onClick} icon="pencil" />
     );
   }
@@ -18,7 +18,7 @@ var EditButton = React.createClass({
 var DeleteButton = React.createClass({
   render: function() {
     return (
-      <Button className="btn-delete" type="danger" size="xs" icon="trash"
+      <Button className="btn-delete" kind="danger" size="xs" icon="trash"
               title="Delete" onClick={this.props.onClick} disabled={this.props.checked} />
     );
   }
@@ -33,7 +33,7 @@ var MarkAsReadButton = React.createClass({
 
   render: function() {
     return (
-      <Button className="btn-mark-as-read" type="default" size="xs"
+      <Button className="btn-mark-as-read" kind="default" size="xs"
               title={`Mark as ${this.props.unread ? "read" : "unread"}`}
               icon={this.props.unread ? "eye-close" : "eye-open"}
               onClick={this.onClick} />
@@ -44,7 +44,7 @@ var MarkAsReadButton = React.createClass({
 var ArchiveButton = React.createClass({
   render: function() {
     return (
-      <Button className="btn-archive" type="default" title="Archive"
+      <Button className="btn-archive" kind="default" title="Archive"
               size="xs" icon="save-file" onClick={this.props.onClick} />
     );
   }

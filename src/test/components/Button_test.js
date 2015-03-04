@@ -2,7 +2,6 @@
 
 import React from "react/addons";
 import { expect } from "chai";
-import { $ } from "../utils";
 
 import Button from "../../js/components/Button";
 
@@ -31,5 +30,17 @@ describe("Button tests", function() {
     expect(classList.contains("btn")).eql(true);
     expect(classList.contains("foo")).eql(true);
     expect(classList.contains("bar")).eql(true);
+  });
+
+  it("should render a submit button", function() {
+    var view = TestUtils.renderIntoDocument(<Button type="submit" />);
+
+    expect(view.getDOMNode().getAttribute("type")).eql("submit");
+  });
+
+  it("should propagate html button element attributes", function() {
+    var view = TestUtils.renderIntoDocument(<Button title="plop" />);
+
+    expect(view.getDOMNode().getAttribute("title")).eql("plop");
   });
 });

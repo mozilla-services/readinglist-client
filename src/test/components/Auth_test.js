@@ -33,9 +33,10 @@ describe("Auth tests", function() {
   });
 
   describe("Auth > SignIn", function() {
-    var signinButton;
+    var signinForm, signinButton;
 
     beforeEach(function() {
+      signinForm = $(view, "form");
       signinButton = $(view, "button");
     });
 
@@ -51,10 +52,21 @@ describe("Auth tests", function() {
     });
 
     it("should trigger the signin AuthAction", function() {
-      TestUtils.Simulate.click(signinButton);
+      TestUtils.Simulate.submit(signinForm);
 
       sinon.assert.calledOnce(AuthActions.signin);
+      sinon.assert.calledWithExactly(AuthActions.signin, {persistent: false});
     });
+
+    it("should trigger the signin AuthAction with persistent parameter",
+      function() {
+        var rememberMe = $(view, "input[type=checkbox]");
+        rememberMe.checked = true;
+        TestUtils.Simulate.submit(signinForm);
+
+        sinon.assert.calledOnce(AuthActions.signin);
+        sinon.assert.calledWithExactly(AuthActions.signin, {persistent: true});
+      });
   });
 
   describe("Auth > UserInfo", function() {
