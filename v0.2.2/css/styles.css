@@ -1,0 +1,28 @@
+.list-empty {
+  padding: .8em 0 .5em 0;
+}
+
+.list-pages {
+  padding: .7em .5em 0 0;
+}
+
+.panel-actions button, .ArticleEntry__actions button {
+  margin-left: .4em;
+}
+
+.list-group-item.active h4 a {
+  color: #fff;
+}
+
+.panel-title .badge {
+  margin-left: .5em;
+}
+
+.list-filters {
+  padding: .2em .5em .5em .5em;
+  line-height: 2em;
+}
+
+.list-filter-toggler {
+  margin-left: .5em;
+}
