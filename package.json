@@ -1,6 +1,6 @@
 {
   "name": "readinglist-client",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Client webapp for the Mozilla readinglist API.",
   "main": "index.js",
   "scripts": {
