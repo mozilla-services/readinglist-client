@@ -61,11 +61,11 @@ describe("Batch", function() {
       expect(query.defaults).eql({foo: "bar"});
       expect(JSON.stringify(query.requests)).eql(JSON.stringify([{
         method: "POST",
-        path: "/v0/articles",
+        path: "/articles",
         body: art1
       }, {
         method: "POST",
-        path: "/v0/articles",
+        path: "/articles",
         body: art2
       }]));
     });
