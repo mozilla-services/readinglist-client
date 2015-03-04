@@ -7,7 +7,7 @@ import { AuthStore, ArticleStore, stores } from "./flux";
 import App from "./components/App";
 
 // XXX handle this with envify
-var serverUrl = process.env.READINGLIST_SERVER_BASEURL || "http://0.0.0.0:8000/v0";
+var serverUrl = process.env.READINGLIST_SERVER_BASEURL || "http://0.0.0.0:8000/v1";
 var proxyServerUrl = process.env.READABLE_PROXY_URL    || "http://0.0.0.0:3000/api/get";
 var clientIdentifier = process.env.CLIENT_DEVICE_IDENTIFIER || "readinglist-client";
 var debug = process.env.NODE_ENV === "development";
