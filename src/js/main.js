@@ -1,5 +1,6 @@
 "use strict";
 
+import "babel/polyfill";
 import React from "react/addons";
 import API from "./api";
 import ContentManager from "./content";
