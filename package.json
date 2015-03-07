@@ -30,6 +30,7 @@
     "bootstrap": "^3.3.*",
     "browserify": "^9.0.*",
     "chai": "latest",
+    "dexie": "^1.0.3",
     "docbrown": "^0.5.*",
     "envify": "^3.2.*",
     "eslint": "^0.15.1",

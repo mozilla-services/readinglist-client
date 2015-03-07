@@ -1,67 +1,42 @@
 "use strict";
 
+import Dexie from "dexie";
 import localforage from "localforage";
 import EventEmitter from "events";
 
 export default class Local extends EventEmitter {
   constructor(options={}) {
-    this.storage = options.storage || this.createStorage(options.storageConfig);
     this.debug = Boolean(options.debug);
+    this.db = this.createDB();
   }
 
-  createStorage(options={}) {
-    localforage.config(Object.assign({
-      name:      "readinglist-client",
-      storeName: "articles",
-      version:   "1.0"
-    }, options));
-    return localforage;
-  }
-
-  initDB() {
-
-  }
-
-  _setArticle(article) {
-    var key = `article:id=${article.id}`;
-    return this.storage.setItem(key, article).catch(err => {
-      this.emit("error", err);
+  createDB() {
+    var db = new Dexie("readinglist");
+    db.on("error", function(err) {
+      console.log("error", err);
     });
+    db.version(1).stores({
+      articles: [
+        "id", "last_modified", "url", "title", "resolved_url", "resolved_title",
+        "excerpt", "archived", "favorite", "is_article", "word_count", "unread",
+        "added_by", "added_on", "stored_on", "marked_read_by", "marked_read_on",
+        "read_position"
+      ].join(",")
+    });
+    db.open();
+    return db;
+  }
+
+  drop() {
+    this.db.close();
+    return this.db.delete();
   }
 
   createArticle(article) {
-    //this._queue.push({name: "createArticle", args: arguments});
-    return this._setArticle(article).then(() => {
-      this.emit("created", article);
-      return article;
-    });
+    return this.db.articles.add(article).then(() => article);
   }
 
   listArticles(filters={}) {
-    var articles = [];
-    return this.storage.iterate(article => {
-      // XXX process filters
-      articles.push(article);
-    }).then(() => articles);
-  }
-
-  getArticle(params={}) {
-    var key = `article:id=${params.id}`;
-    return this.storage.getItem(key);
-  }
-
-  updateArticle(article) {
-    return this._setArticle(article).then(() => {
-      this.emit("updated", article);
-    });
-  }
-
-  deleteArticle(article) {
-    var key = `article:id=${article.id}`;
-    return this.storage.removeItem(key).then(() => {
-      this.emit("deleted", key, article);
-    }).catch(err => {
-      this.emit("error", err);
-    });
+    return this.db.articles.toArray();
   }
 }
