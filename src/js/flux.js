@@ -3,8 +3,6 @@
 import DocBrown from "docbrown";
 import sampleArticles from "../data/samples.json";
 
-import { ArticleConstants } from "./api";
-
 export var Dispatcher = DocBrown.createDispatcher();
 
 export var AuthActions = DocBrown.createActions(Dispatcher, [

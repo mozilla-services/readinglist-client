@@ -5,6 +5,8 @@ import React from "react/addons";
 import API from "./api";
 import ContentManager from "./content";
 import { AuthStore, ArticleStore, stores } from "./flux";
+/*eslint no-unused-vars: 0*/
+// XXX https://github.com/babel/babel-eslint/issues/17
 import App from "./components/App";
 
 // XXX handle this with envify

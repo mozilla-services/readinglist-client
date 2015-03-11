@@ -4,7 +4,7 @@ import React from "react/addons";
 import sinon from "sinon";
 import { expect } from "chai";
 import { ArticleActions } from "../../js/flux";
-import { $ } from "../utils";
+import { $ } from "../testutils";
 
 import ArticleForm from "../../js/components/ArticleForm";
 

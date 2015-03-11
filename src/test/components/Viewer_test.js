@@ -3,7 +3,7 @@
 import React from "react/addons";
 import sinon from "sinon";
 import { expect } from "chai";
-import { $ } from "../utils";
+import { $ } from "../testutils";
 
 import { ArticleActions } from "../../js/flux";
 

@@ -3,9 +3,8 @@
 import { expect } from "chai";
 import sinon from "sinon";
 
-import { asyncAssert, returns } from "../utils";
+import { asyncAssert, returns } from "../testutils";
 
-import { ArticleConstants } from "../../js/api";
 import { Dispatcher, ArticleStore, ArticleActions } from "../../js/flux";
 
 describe("ArticleStore", function() {

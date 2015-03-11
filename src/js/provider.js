@@ -1,21 +1,25 @@
 "use strict";
 
+import { waterfall } from "./utils";
+
 export default class {
-  constructor(db, api) {
+  constructor(db, api, options={}) {
     this.db = db;
     this.api = api;
+    this.navigator = options.navigator || navigator;
+  }
+
+  online() {
+    return this.navigator.onLine;
   }
 
   createArticle(article) {
-    // XXX start local db transaction
-    return Promise.all([
-      this.db.createArticle(article),
-      this.api.createArticle(article) // XXX check for online status
-                                      // if online, perform request
-                                      // if offline, add batch
-    ]).catch(err => {
-      // XXX rollback local db transaction
-      throw err;
-    });
+    if (!this.online) {
+      return this.batch.createArticle(article);
+    }
+    return waterfall([
+      this.api.createArticle.bind(this.api),
+      this.db.createArticle.bind(this.db)
+    ], article);
   }
 }

@@ -1,10 +1,7 @@
 "use strict";
 
-import { expect } from "chai";
 import sinon from "sinon";
-import localforage from "localforage";
 import { waterfall } from "../js/utils";
-import { returns } from "./utils";
 
 import Local from "../js/local";
 

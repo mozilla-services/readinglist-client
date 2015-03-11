@@ -1,12 +1,12 @@
 "use strict";
 
 import { expect } from "chai";
-import { respondWith } from "./utils";
+import { respondWith } from "./testutils";
 import sinon from "sinon";
 
 import API from "../js/api";
 import { AUTH_TOKEN_KEYNAME, authInterceptor } from "../js/api";
-import { returns } from "./utils";
+import { returns } from "./testutils";
 import Batch from "../js/batch";
 
 describe("API", function() {

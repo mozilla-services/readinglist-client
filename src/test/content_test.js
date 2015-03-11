@@ -3,7 +3,7 @@
 import { expect } from "chai";
 import sinon from "sinon";
 
-import { returns } from "./utils";
+import { returns } from "./testutils";
 
 import ContentManager from "../js/content";
 

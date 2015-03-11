@@ -33,7 +33,7 @@
     "dexie": "^1.0.3",
     "docbrown": "^0.5.*",
     "envify": "^3.2.*",
-    "eslint": "^0.15.1",
+    "eslint": "^0.16.1",
     "gulp": "^3.8.*",
     "gulp-uglify": "^1.1.*",
     "gulp-webserver": "^0.9.*",

@@ -2,7 +2,7 @@
 
 import React from "react/addons";
 import { expect } from "chai";
-import { $, $$ } from "../utils";
+import { $, $$ } from "../testutils";
 
 import Panel from "../../js/components/Panel";
 

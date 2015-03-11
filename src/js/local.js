@@ -12,7 +12,7 @@ const articleFields = [
 ];
 const booleanFields = ["archived", "favorite", "is_article", "unread"];
 
-export default class Local extends EventEmitter {
+export default class extends EventEmitter {
   constructor(options={}) {
     this.debug = Boolean(options.debug);
     this.db = this.createDB();

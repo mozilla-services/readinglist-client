@@ -4,7 +4,7 @@ import React from "react/addons";
 import sinon from "sinon";
 import { expect } from "chai";
 import { ArticleActions } from "../../js/flux";
-import { $, $$, findELByContent } from "../utils";
+import { $, $$, findELByContent } from "../testutils";
 import fakeArticleList from "../fixtures/articles.json";
 
 import { ArticleConstants } from "../../js/api";

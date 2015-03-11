@@ -40,7 +40,7 @@ export var authInterceptor = interceptor({
  * Readinglist server REST API client.
  * @link http://readinglist.readthedocs.org/
  */
-export default class API {
+export default class {
   /**
    * Constructor.
    * @constructor

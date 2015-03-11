@@ -12,7 +12,7 @@ export const DEFAULT_STORAGE_KEY_PREFIX = "readinglist:article:";
  *
  * @link https://github.com/n1k0/readable-proxy/
  */
-export default class ContentManager {
+export default class {
   constructor(proxyServerUrl, options={debug: false}) {
     this.proxyServerUrl = proxyServerUrl;
     this.client = options.client || this.createClient();

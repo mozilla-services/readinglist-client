@@ -1,6 +1,6 @@
 "use strict";
 
-export default class Batch {
+export default class {
   /**
    * Constructor.
    * @param  {API}    api      The api client.
