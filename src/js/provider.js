@@ -3,23 +3,30 @@
 import { waterfall } from "./utils";
 
 export default class {
-  constructor(db, api, options={}) {
-    this.db = db;
+  constructor(local, api, options={}) {
+    this.local = local;
     this.api = api;
+    this.batch = this.api.createBatch();
     this.navigator = options.navigator || navigator;
   }
 
-  online() {
+  get online() {
     return this.navigator.onLine;
   }
 
+  get remote() {
+    return this.online ? this.api : this.batch;
+  }
+
+  _handleError(err) {
+    console.error(err);
+    throw err;
+  }
+
   createArticle(article) {
-    if (!this.online) {
-      return this.batch.createArticle(article);
-    }
     return waterfall([
-      this.api.createArticle.bind(this.api),
-      this.db.createArticle.bind(this.db)
-    ], article);
+      this.remote.createArticle.bind(this.remote),
+      this.local.createArticle.bind(this.local)
+    ], article).catch(this._handleError);
   }
 }
