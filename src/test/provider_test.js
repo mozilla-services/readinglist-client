@@ -28,7 +28,7 @@ describe("Local", function() {
     sandbox.restore();
   });
 
-  describe("#createArticle()", function() {
+  describe("#process()", function() {
     var api, local, provider;
 
     beforeEach(function() {
@@ -41,7 +41,7 @@ describe("Local", function() {
       sandbox.stub(api, "createArticle", returns(Promise.resolve(article)));
       sandbox.stub(local, "createArticle", returns(Promise.resolve(article)));
 
-      return provider.createArticle(article).should.become(article);
+      return provider.process("createArticle", article).should.become(article);
     });
 
     it("should handle api error", function() {
@@ -49,7 +49,7 @@ describe("Local", function() {
       sandbox.stub(api, "createArticle", returns(Promise.reject(err)));
       sandbox.stub(local, "createArticle", returns(Promise.resolve(article)));
 
-      return provider.createArticle(article).should.be.rejectedWith(err);
+      return provider.process("createArticle", article).should.be.rejectedWith(err);
     });
 
     it("should handle local db error", function() {
@@ -57,15 +57,21 @@ describe("Local", function() {
       sandbox.stub(api, "createArticle", returns(Promise.resolve(article)));
       sandbox.stub(local, "createArticle", returns(Promise.reject(err)));
 
-      return provider.createArticle(article).should.be.rejectedWith(err);
+      return provider.process("createArticle", article).should.be.rejectedWith(err);
     });
 
-    it("should proceed batching article creation when offline", function() {
+    it("should proceed batching article creation when offline", function(done) {
+      provider.navigator.onLine = false;
+
       sandbox.stub(api, "createArticle", returns(Promise.resolve(article)));
       sandbox.stub(local, "createArticle", returns(Promise.resolve(article)));
       sandbox.stub(provider.batch, "createArticle", returns(Promise.resolve(article)));
 
-      return provider.createArticle(article).should.become(article);
+      return provider.process("createArticle", article).then(article => {
+        sinon.assert.calledOnce(provider.batch.createArticle);
+        sinon.assert.calledWithExactly(provider.batch.createArticle, article);
+        done();
+      }).catch(err => done(err));
     });
   });
 });

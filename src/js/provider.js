@@ -8,6 +8,7 @@ export default class {
     this.api = api;
     this.batch = this.api.createBatch();
     this.navigator = options.navigator || navigator;
+    this.debug = !!options.debug;
   }
 
   get online() {
@@ -19,14 +20,28 @@ export default class {
   }
 
   _handleError(err) {
-    console.error(err);
+    if (this.debug) {
+      console.error("Provider error", err.message);
+    }
     throw err;
   }
 
-  createArticle(article) {
+  process(method, article) {
     return waterfall([
-      this.remote.createArticle.bind(this.remote),
-      this.local.createArticle.bind(this.local)
-    ], article).catch(this._handleError);
+      this.remote[method].bind(this.remote),
+      this.local[method].bind(this.local)
+    ], article).catch(this._handleError.bind(this));
+  }
+
+  createArticle(article) {
+    return this.process("createArticle", article);
+  }
+
+  updateArticle(article) {
+    return this.process("updateArticle", article);
+  }
+
+  deleteArticle(article) {
+    return this.process("deleteArticle", article);
   }
 }
